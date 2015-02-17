@@ -18,7 +18,9 @@ var AppView = Backbone.View.extend({
 	},
 
 	run: function () {
-		EXECUTE(toByteArray(ASSEMBLE(this.editor.getSource())));
+		var obj = ASSEMBLE(this.editor.getSource());
+		this.inspector.setObjectCode(obj);
+		EXECUTE(toByteArray(obj));
 		this.inspector.updateRegisters();
 	}
 });

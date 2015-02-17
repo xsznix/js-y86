@@ -42,3 +42,25 @@ html, body {
 	float: left;
 	width: 50%;
 }
+
+.object-code-line {
+	clear: both;
+	font-family: monospace;
+	font-size: 14px;
+	white-space: nowrap;
+	overflow-x: scroll;
+}
+
+.object-code-line div {
+	float: left;
+}
+
+.object-code-line .line-no {
+	width: 60px;
+	min-width: 60px;
+}
+
+.object-code-line .binary {
+	width: 120px;
+	min-width: 120px;
+}

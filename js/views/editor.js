@@ -8,7 +8,11 @@ var EditorView = Backbone.View.extend({
 		this.$el.empty().append(this.template({
 			code: $('#default_y86_code').html()
 		}));
-		this.editor = CodeMirror.fromTextArea(this.$('.code').get(0));
+
+		// Unless timeout is set, the editor will not show up until user clicks.
+		window.setTimeout(function () {
+			this.editor = CodeMirror.fromTextArea(this.$('.code').get(0));
+		}.bind(this), 0);
 	},
 
 	getSource: function () {
