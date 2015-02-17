@@ -1,9 +1,9 @@
 // Constants
-var MEM_SIZE = 0x10000;
+var MEM_SIZE = 65536;
 
 // Registers and memory
 var PC 		= 0,
-	REG		= new Uint32Array(8),
+	REG		= [0, 0, 0, 0, 0, 0, 0, 0],
 	STAT	= 'AOK',
 	MEMORY 	= new Uint32Array(MEM_SIZE),
 	SF = 0, ZF = 0, OF = 0,
@@ -31,7 +31,7 @@ function print (x) {
 // Reset
 function RESET() {
 	PC 	= 0;
-	REG	= new Uint32Array(8);
+	REG	= [0, 0, 0, 0, 0, 0, 0, 0];
 	STAT = 'AOK';
 	SF = 0; ZF = 0; OF = 0;
 	ERR = 'AOK';
@@ -279,15 +279,15 @@ function toByteArray(str) {
 		line, addr, size, bytearr;
 
 	// Get size of program, pad with 32 bytes at end
-	// for (i in lines) {
-	// 	line = lines[i];
-	// 	addr = line.match(/^\s*0x([\da-f]+)/i);
-	// 	if (addr) {
-	// 		size = parseInt(addr[1], 16) + 32;
-	// 	}
-	// }
+	for (i in lines) {
+		line = lines[i];
+		addr = line.match(/^\s*0x([\da-f]+)/i);
+		if (addr) {
+			size = parseInt(addr[1], 16) + 32;
+		}
+	}
 	// Init array with 0's
-	bytearr = new Uint32Array(MEM_SIZE);
+	bytearr = new Uint32Array(Math.max(MEM_SIZE, size));
 
 	// Set instructions at correct locations
 	for (i in lines) {

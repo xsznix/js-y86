@@ -1,5 +1,8 @@
 // General constants and functions
-var INSTRUCTION_LEN = [1, 1, 2, 6, 6, 6, 2, 5, 5, 1, 2, 2],
+var INSTRUCTION_LEN = [1, 1, 2, 6,
+                       6, 6, 2, 5,
+                       5, 1, 2, 2,
+                       1, 1, 1, 1],
 	num2reg = ['%eax', '%ecx', '%edx', '%ebx','%esp', '%ebp', '%esi', '%edu'],
 	inst2num = {
 		'halt': 0,
@@ -22,13 +25,22 @@ var INSTRUCTION_LEN = [1, 1, 2, 6, 6, 6, 2, 5, 5, 1, 2, 2],
 		'call': 8,
 		'ret': 9,
 		'pushl': 10,
-		'popl': 11
+		'popl': 11,
+
+		'brk': 15,
+		'brkg': 15,
+		'brkge': 15,
+		'brke': 15,
+		'brkne': 15,
+		'brkl': 15,
+		'brkle': 15
 	},
 	inst2fn = {
 		'addl': 0,
 		'subl': 1,
 		'andl': 2,
 		'xorl': 3,
+
 		'jmp': 0,
 		'jg': 1,
 		'jge': 2,
@@ -36,6 +48,14 @@ var INSTRUCTION_LEN = [1, 1, 2, 6, 6, 6, 2, 5, 5, 1, 2, 2],
 		'jne': 4,
 		'jl': 5,
 		'jle': 6,
+
+		'brk': 0,
+		'brkg': 1,
+		'brkge': 2,
+		'brke': 3,
+		'brkne': 4,
+		'brkl': 5,
+		'brkle': 6,
 	};
 
 function print(x){

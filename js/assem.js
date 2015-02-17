@@ -47,3 +47,7 @@ ASSEM[10] = function () {
 ASSEM[11] = function () {
 	return 'b0' + this.rA + 'f';
 };
+
+ASSEM[15] = function () {
+	return 'f' + this.fn;
+}

@@ -24,3 +24,11 @@ SYNTAX['call'] = ['Dest'];
 SYNTAX['ret'] = [];
 SYNTAX['pushl'] = ['rA'];
 SYNTAX['popl'] = ['rA'];
+
+SYNTAX['brk'] = [];
+SYNTAX['brkg'] = [];
+SYNTAX['brkge'] = [];
+SYNTAX['brke'] = [];
+SYNTAX['brkne'] = [];
+SYNTAX['brkl'] = [];
+SYNTAX['brkle'] = [];
