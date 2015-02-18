@@ -67,13 +67,24 @@ INSTR[5] = function () {
 };
 INSTR[6] = function () {
 	var valA = REG[this.rA],
-		valB = REG[this.rB];
+		valB = REG[this.rB],
+		sgnA, sgnB, sgnR, signBit = 0x80000000;
 	switch(this.fn) {
 		case 0:
+			sgnA = !!(valA & signBit);
+			sgnB = !!(valB & signBit);
 			REG[this.rB] += REG[this.rA];
+			sgnR = !!(REG[this.rB] & signBit);
+			OF = +(sgnA && sgnB && !sgnR ||
+			       !sgnA && !sgnB && sgnR)
 			break;
 		case 1:
+			sgnA = !!(valA & signBit);
+			sgnB = !!(valB & signBit);
 			REG[this.rB] -= REG[this.rA];
+			sgnR = !!(REG[this.rB] & signBit);
+			OF = +(sgnA && sgnB && !sgnR ||
+			       !sgnA && !sgnB && sgnR)
 			break;
 		case 2:
 			REG[this.rB] = REG[this.rA] & REG[this.rB];
@@ -84,7 +95,6 @@ INSTR[6] = function () {
 	}
 	SF = REG[this.rB] & 0x80000000 ? 1 : 0;
 	ZF = REG[this.rB] === 0 ? 1 : 0;
-	OF = 0; // TODO: set this flag
 };
 INSTR[7] = function ()  {
 	switch(this.fn) {
