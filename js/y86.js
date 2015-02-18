@@ -14,15 +14,6 @@ Uint32Array.prototype.slice = function () {
 	return Array.prototype.slice.apply(this, arguments);
 }
 
-// Include files if in nodejs, otherwise include them manually
-if (typeof require !== 'undefined') {
-	var fs = require('fs');
-	eval(fs.readFileSync('general.js') + '');
-	eval(fs.readFileSync('instr.js') + '');
-	eval(fs.readFileSync('assem.js') + '');
-	eval(fs.readFileSync('syntax.js') + '');
-}
-
 // Print
 function print (x) {
 	console.log(x);
@@ -240,18 +231,11 @@ function ASSEMBLE (raw) {
 	return result;
 }
 
-// Execute a byte array
-// TODO: deprecate this
-function EXECUTE (bytearr) {
-	MEMORY 	= bytearr;
-	STAT	= 'AOK';
+// Initialize the VM with some object code
+function INIT (obj) {
+	MEMORY = toByteArray(obj);
+	STAT = 'AOK';
 	RESET();
-
-	while (PC < MEM_SIZE && STAT === 'AOK') {
-		STEP();
-	}
-
-	return STAT;
 }
 
 // Run until hitting a breakpoint, halting, or erroring
@@ -320,31 +304,4 @@ function toByteArray(str) {
 		}
 	}
 	return bytearr;
-}
-
-//check if on node.js and execute the first arg as a file
-if (typeof require !== 'undefined') {
-	if (process.argv.length === 4) {
-		var option = process.argv[2],
-			filename = process.argv[3],
-			source = fs.readFileSync(filename, 'utf8');
-
-		if (option === '-a') {
-			// assemble file 
-			print(ASSEMBLE(source));
-		}
-		else if (option === '-e') {
-			// execute file
-			var bytearr = toByteArray(source);
-			print('Executing ' + filename + '...');
-			EXECUTE(bytearr);
-			printRegisters(REG);
-			print('STAT = ' + STAT);
-		}
-		else {
-			print('Invalid option. -a for assemble or -e for execute');
-		}
-	} else {
-		print('Invalid format. Must be formatted like \'node y86.js option filename\'.');
-	}
 }

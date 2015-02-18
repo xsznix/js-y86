@@ -11,8 +11,12 @@ var ObjectCodeView = Backbone.View.extend({
 	},
 
 	render: function () {
-		this.$el.empty().append(this.template());
-		this.$('.lines').append(_.map(this.$lines, function ($line) {
+		if (!this.rendered) {
+			this.$el.empty().append(this.template());
+			this.rendered = true;
+		}
+
+		this.$('.lines').empty().append(_.map(this.$lines, function ($line) {
 			return $line.$el;
 		}));
 	},
@@ -82,4 +86,4 @@ var ObjectCodeLineView = Backbone.View.extend({
 	unhighlight: function () {
 		this.$el.removeClass('highlighted');
 	}
-})
+});

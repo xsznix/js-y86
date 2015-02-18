@@ -11,6 +11,7 @@ var InspectorView = Backbone.View.extend({
 		// 	});
 		// }
 		this.listenTo(Backbone.Events, 'app:redraw', this.updateRegisters);
+		$(window).on('resize', this.resizeObjectView.bind(this));
 		this.render();
 	},
 
@@ -25,8 +26,10 @@ var InspectorView = Backbone.View.extend({
 		// bytesContainer.append(fragment);
 
 		this.$('.object').append(this.$objcode.$el);
-
 		this.$('.registers-wrapper').append(this.registers.$el);
+		window.setTimeout(function () {
+			this.resizeObjectView();
+		}.bind(this), 0);
 	},
 
 	updateRegisters: function () {
@@ -63,5 +66,10 @@ var InspectorView = Backbone.View.extend({
 		});
 
 		this.$objcode.setObjectCode(this.objectCode);
+	},
+
+	resizeObjectView: function () {
+		var $lines = this.$objcode.$('.lines');
+		$lines.css('height', ($(window).height() - $lines.position().top - this.$('.registers-wrapper').height()) + 'px');
 	}
 });

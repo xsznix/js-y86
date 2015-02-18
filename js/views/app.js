@@ -8,9 +8,10 @@ var AppView = Backbone.View.extend({
 	},
 
 	events: {
-		'click .run': 'run',
+		'click .compile': 'compile',
+		'click .continue': 'continue',
 		'click .step': 'step'
-	}, // TODO
+	},
 
 	render: function () {
 		this.$el.empty().append(this.template());
@@ -18,15 +19,27 @@ var AppView = Backbone.View.extend({
 		this.$('.inspector').empty().append(this.inspector.$el);
 	},
 
-	run: function () {
+	compile: function () {
 		var obj = ASSEMBLE(this.editor.getSource());
 		this.inspector.setObjectCode(obj);
-		EXECUTE(toByteArray(obj));
+		INIT(obj);
+
+		Backbone.Events.trigger('app:redraw');
+		this.$('.continue').text('Start');
+		this.listenToOnce(Backbone.Events, 'app:redraw', this.redrawContinueButton);
+	},
+
+	continue: function () {
+		RUN();
 		Backbone.Events.trigger('app:redraw');
 	},
 
 	step: function () {
 		STEP();
 		Backbone.Events.trigger('app:redraw');
+	},
+
+	redrawContinueButton: function () {
+		this.$('.continue').text('Continue');
 	}
 });

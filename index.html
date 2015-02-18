@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="css/index.css">
   </head>
   <body>
-    <h1>y86 Simulator</h1>
-        
+
     <div id="app"></div>
 
 <script type="text/template" id="default_y86_code"># Execution begins at address 0
@@ -65,17 +64,23 @@ End:
 Stack:</script>
 
     <script type="text/template" id="tmpl_app">
-        <div class="actions">
-            <button class="run">Run</button>
-            <button class="step">Step</button>
-            <button class="pause">Pause</button>
+        <div class="header">
+            <h1>Y86 Simulator</h1>
+            <div class="actions">
+                <button class="compile">Compile</button>
+                <button class="continue">Start</button>
+                <button class="step">Step</button>
+            </div>
         </div>
-        <div class="editor"></div>
-        <div class="inspector"></div>
+        <div class="app-body">
+            <div class="editor"></div>
+            <div class="inspector"></div>
+        </div>
     </script>
 
     <script type="text/template" id="tmpl_editor">
-        <textarea class="code"><%= code %></textarea>
+        <h2>Source code</h2>
+        <div class="code"><%= code %></div>
     </script>
 
     <script type="text/template" id="tmpl_inspector">
@@ -101,37 +106,71 @@ Stack:</script>
     </script>
 
     <script type="text/template" id="tmpl_registers">
-        <div class="register">
-            <div class="label">%eax</div>
-            <div class="value"><%= eax %></div>
+        <div class="column register_column">
+            <div class="register">
+                <div class="label">%eax</div>
+                <div class="value_hex"><%= eax_hex %></div>
+                <div class="value_dec"><%= eax_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%ecx</div>
+                <div class="value_hex"><%= ecx_hex %></div>
+                <div class="value_dec"><%= ecx_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%ebx</div>
+                <div class="value_hex"><%= ebx_hex %></div>
+                <div class="value_dec"><%= ebx_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%edx</div>
+                <div class="value_hex"><%= edx_hex %></div>
+                <div class="value_dec"><%= edx_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%ebp</div>
+                <div class="value_hex"><%= ebp_hex %></div>
+                <div class="value_dec"><%= ebp_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%esp</div>
+                <div class="value_hex"><%= esp_hex %></div>
+                <div class="value_dec"><%= esp_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%esi</div>
+                <div class="value_hex"><%= esi_hex %></div>
+                <div class="value_dec"><%= esi_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%edu</div>
+                <div class="value_hex"><%= edu_hex %></div>
+                <div class="value_dec"><%= edu_dec %></div>
+            </div>
         </div>
-        <div class="register">
-            <div class="label">%ecx</div>
-            <div class="value"><%= ecx %></div>
-        </div>
-        <div class="register">
-            <div class="label">%ebx</div>
-            <div class="value"><%= ebx %></div>
-        </div>
-        <div class="register">
-            <div class="label">%edx</div>
-            <div class="value"><%= edx %></div>
-        </div>
-        <div class="register">
-            <div class="label">%ebp</div>
-            <div class="value"><%= ebp %></div>
-        </div>
-        <div class="register">
-            <div class="label">%esp</div>
-            <div class="value"><%= esp %></div>
-        </div>
-        <div class="register">
-            <div class="label">%esi</div>
-            <div class="value"><%= esi %></div>
-        </div>
-        <div class="register">
-            <div class="label">%edu</div>
-            <div class="value"><%= edu %></div>
+        <div class="column status_column">
+            <div class="flags">
+                <div class="flag">
+                    <div class="label">SF</div>
+                    <div class="value"><%= sf %></div>
+                </div>
+                <div class="flag">
+                    <div class="label">ZF</div>
+                    <div class="value"><%= zf %></div>
+                </div>
+                <div class="flag">
+                    <div class="label">OF</div>
+                    <div class="value"><%= of %></div>
+                </div>
+            </div>
+            <div class="status">
+                <div class="label">STAT</div>
+                <div class="value"><%= stat %></div>
+            </div>
+            <div class="pc">
+                <div class="label">PC</div>
+                <div class="value"><%= pc %></div>
+            </div>
         </div>
     </script>
 
@@ -139,7 +178,7 @@ Stack:</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
 
-    <script src="js/codemirror-compressed.js"></script>
+    <script src="js/ace-builds/src/ace.js"></script>
 
     <script src="js/y86.js"></script>
     <script src="js/assem.js"></script>

@@ -1,6 +1,7 @@
 var EditorView = Backbone.View.extend({
 	initialize: function () {
 		this.template = _.template($('#tmpl_editor').html());
+		$(window).on('resize', this.resizeEditor.bind(this));
 		this.render();
 	},
 
@@ -9,13 +10,16 @@ var EditorView = Backbone.View.extend({
 			code: $('#default_y86_code').html()
 		}));
 
-		// Unless timeout is set, the editor will not show up until user clicks.
-		window.setTimeout(function () {
-			this.editor = CodeMirror.fromTextArea(this.$('.code').get(0));
-		}.bind(this), 0);
+		this.$editor = this.$('.code');
+		this.editor = ace.edit(this.$editor.get(0));
+		this.resizeEditor();
 	},
 
 	getSource: function () {
 		return this.editor.getValue();
+	},
+
+	resizeEditor: function () {
+		this.$editor.css('height', ($(window).height() - this.$editor.position().top) + 'px');
 	}
 });

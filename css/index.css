@@ -6,65 +6,134 @@ html, body {
 	overflow: hidden;
 }
 
-#app > div > .editor,
-#app > div > .inspector {
-	position: fixed;
-	top: 120px;
-	bottom: 0;
-	overflow-y: scroll;
-	margin: -1px;
-	bottom: 1px solid #ccc;
+#app {
+	width: 100%;
+	height: 100%;
+	max-height: 100%;
 }
 
-#app > div > .editor {
-	left: 0;
-	right: 50%;
-}
+#app > div {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
 
-#app > div > .inspector {
-	left: 50%;
-	right: 0;
-}
-
-.editor > div, .CodeMirror {
+	width: 100%;
 	height: 100%;
 }
 
-.memory, .registers {
-	font-family: monospace;
+#app .header {
+	display: -webkit-flex;
+	display: flex;
 }
 
-.byte, .register {
-	clear: both;
+#app .app-body {
+	display: -webkit-flex;
+	display: flex;
+
+	-webkit-flex: 1 1;
+	flex: 1 1;
+
+	width: 100%;
 }
 
-.byte div, .register div {
-	float: left;
+.editor, .inspector {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
+
 	width: 50%;
 }
 
-.object-code-line {
-	clear: both;
-	font-family: monospace;
-	font-size: 14px;
-	white-space: nowrap;
-	overflow-x: scroll;
+
+.editor > div {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
 }
 
-.object-code-line div {
-	float: left;
+.inspector .object .lines {
+	overflow-x: auto;
+	overflow-y: auto;
+}
+
+.object-code-line {
+	display: -webkit-flex;
+	display: flex;
+
+	font-family: monospace;
 }
 
 .object-code-line .line-no {
 	width: 60px;
-	min-width: 60px;
 }
 
 .object-code-line .binary {
 	width: 120px;
-	min-width: 120px;
+}
+
+.object-code-line .source {
+	-webkit-flex: 1 1;
+	flex: 1 1;
+	white-space: pre;
 }
 
 .object-code-line.highlighted {
-	background: #ffe;
+	background: #eea;
+}
+
+.registers {
+	display: -webkit-flex;
+	display: flex;
+
+	font-family: monospace;
+
+	max-width: 420px;
+	margin: 0 auto;
+}
+
+.registers .column {
+	flex: 1 1;
+}
+
+.registers .register_column {
+	width: 70%;
+}
+
+.registers .register {
+	display: -webkit-flex;
+	display: flex;
+}
+
+.registers .register .value_hex,
+.registers .register .value_dec {
+	flex: 1 1;
+}
+
+.registers .register .label {
+	width: 45px;
+}
+
+.registers .flags,
+.registers .status,
+.registers .pc {
+	display: -webkit-flex;
+	display: flex;
+}
+
+.registers .flags .flag {
+	display: -webkit-flex;
+	display: flex;
+	flex: 1 1;
+}
+
+.registers .flags .label {
+	width: 25px;
+}
+
+.registers .status .label,
+.registers .pc .label {
+	width: 40px;
 }
