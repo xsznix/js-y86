@@ -8,8 +8,6 @@ define("ace/mode/y86_highlight_rules",
 
 	var Y86HighlightRules = function() {
 	    
-	    var instructions = '';
-
 	    this.$rules = {
 	        "start" : [{
 	            "token": "comment",
