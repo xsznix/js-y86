@@ -8,7 +8,48 @@ INSTR[1] = function () {
 	//NOP
 };
 INSTR[2] = function () {
-	REG[this.rB] = REG[this.rA];
+	switch(this.fn) {
+		case 0:
+			// RRMOVL
+			REG[this.rB] = REG[this.rA];
+			break;
+		case 1:
+			// CMOVLE
+			if (SF === 1 || ZF === 1) {
+				REG[this.rB] = REG[this.rA];
+			}
+			break;
+		case 2:
+			// CMOVL
+			if (SF === 1) {
+				REG[this.rB] = REG[this.rA];
+			}
+			break;
+		case 3:
+			// CMOVE
+			if (ZF === 1) {
+				REG[this.rB] = REG[this.rA];
+			}
+			break;
+		case 4:
+			// CMOVNE
+			if (ZF === 0) {
+				REG[this.rB] = REG[this.rA];
+			}
+			break;
+		case 5:
+			// CMOVGE
+			if (SF === 0 || ZF === 1) {
+				REG[this.rB] = REG[this.rA];
+			}
+			break;
+		case 6:
+			// CMOVG
+			if (SF === 0 && ZF === 0) {
+				REG[this.rB] = REG[this.rA];
+			}
+			break;
+	}
 };
 INSTR[3] = function () {
 	REG[this.rB] = this.V;
@@ -65,25 +106,25 @@ INSTR[7] = function ()  {
 			break;
 		case 3:
 			// JE
-			if (ZF === 1) { 
+			if (ZF === 1) {
 				PC = this.Dest;
 			}
 			break;
 		case 4:
 			// JNE
-			if (ZF === 0) { 
+			if (ZF === 0) {
 				PC = this.Dest;
 			}
 			break;
 		case 5:
 			// JGE
-			if (ZF === 0 || ZF === 1) { 
+			if (SF === 0 || ZF === 1) {
 				PC = this.Dest;
 			}
 			break;
 		case 6:
 			// JG
-			if (SF === 0 && ZF === 0) { 
+			if (SF === 0 && ZF === 0) {
 				PC = this.Dest;
 			}
 			break;
@@ -139,25 +180,25 @@ INSTR[15] = function () {
 			break;
 		case 3:
 			// BRKE
-			if (ZF === 1) { 
+			if (ZF === 1) {
 				STAT = 'DBG';
 			}
 			break;
 		case 4:
 			// BRKNE
-			if (ZF === 0) { 
+			if (ZF === 0) {
 				STAT = 'DBG';
 			}
 			break;
 		case 5:
 			// BRKGE
-			if (ZF === 0 || ZF === 1) { 
+			if (SF === 0 || ZF === 1) {
 				STAT = 'DBG';
 			}
 			break;
 		case 6:
 			// BRKG
-			if (SF === 0 && ZF === 0) { 
+			if (SF === 0 && ZF === 0) {
 				STAT = 'DBG';
 			}
 			break;

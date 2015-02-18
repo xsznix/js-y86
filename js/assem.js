@@ -9,7 +9,7 @@ ASSEM[1] = function () {
 };
 
 ASSEM[2] = function () {
-	return '20' + this.rA + this.rB;
+	return '2' + this.fn + this.rA + this.rB;
 };
 
 ASSEM[3] = function () {
