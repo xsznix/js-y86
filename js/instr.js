@@ -41,9 +41,9 @@ INSTR[6] = function () {
 			REG[this.rB] = REG[this.rA] ^ REG[this.rB];
 			break;
 	}
-	SF = REG[this.rB] < 0 ? 1 : 0;
+	SF = REG[this.rB] & 0x80000000 ? 1 : 0;
 	ZF = REG[this.rB] === 0 ? 1 : 0;
-	OF = 0;
+	OF = 0; // TODO: set this flag
 };
 INSTR[7] = function ()  {
 	switch(this.fn) {
