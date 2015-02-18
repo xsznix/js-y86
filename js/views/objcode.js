@@ -49,7 +49,7 @@ var ObjectCodeView = Backbone.View.extend({
 		_.each(this.code, function (line) {
 			var $line = new ObjectCodeLineView(line);
 			this.$lines.push($line);
-			if (line.lineno) {
+			if (line.lineno && line.binary.trim().length) {
 				var lineno = parseInt(line.lineno, 16);
 				if (this.linesByLineNo[lineno])
 					this.linesByLineNo[lineno].push($line);

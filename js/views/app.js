@@ -25,7 +25,7 @@ var AppView = Backbone.View.extend({
 		INIT(obj);
 
 		Backbone.Events.trigger('app:redraw');
-		this.$('.continue').text('Start');
+		this.$('.continue span').text('Start');
 		this.listenToOnce(Backbone.Events, 'app:redraw', this.redrawContinueButton);
 	},
 
@@ -40,6 +40,6 @@ var AppView = Backbone.View.extend({
 	},
 
 	redrawContinueButton: function () {
-		this.$('.continue').text('Continue');
+		this.$('.continue span').text('Continue');
 	}
 });

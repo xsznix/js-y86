@@ -1,3 +1,6 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
 html, body {
 	width: 100%;
 	height: 100%;
@@ -20,11 +23,55 @@ html, body {
 
 	width: 100%;
 	height: 100%;
+
+	background: #e4e4e4;
 }
 
 #app .header {
+	z-index: 2;
 	display: -webkit-flex;
 	display: flex;
+	padding: 0 36px;
+
+	background: #2980b9;
+	color: #fff;
+
+	box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+}
+
+#app .header h1 {
+	margin: 8px 16px 8px 0;
+
+	font-family: 'Source Sans Pro';
+	font-weight: 300;
+	font-size: 24px;
+}
+
+#app .header .actions {
+	display: -webkit-flex;
+	display: flex;
+}
+
+#app .header button {
+	padding: 0 12px;
+	background: none;
+	border: none;
+	outline: none;
+	color: #fff;
+
+	font-family: 'Source Sans Pro';
+	font-size: 16px;
+	font-weight: 300;
+
+	cursor: pointer;
+}
+
+#app .header button .fa {
+	margin-right: 4px;
+}
+
+#app .header button:hover {
+	background: rgba(255,255,255,0.1);
 }
 
 #app .app-body {
@@ -34,7 +81,36 @@ html, body {
 	-webkit-flex: 1 1;
 	flex: 1 1;
 
-	width: 100%;
+	margin: 0 24px;
+	
+	background: #fff;
+	box-shadow: 0px 0px 24px #aaa;
+}
+
+#app .app-body h2 {
+	margin: 0;
+	padding: 4px 16px 8px 16px;
+
+	background: #3498db;
+	color: rgba(255,255,255,0.7);
+
+	font-family: 'Source Sans Pro';
+	font-weight: 600;
+	font-size: 14px;
+
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+/* hack to make the h2 blue draw over border */
+.editor h2 {
+	z-index: 1;
+	box-shadow: 2px 0px 0px #3498db;
+}
+
+/* ??? */
+#app .app-body .inspector h2 {
+	padding-bottom: 6px;
 }
 
 .editor, .inspector {
@@ -46,6 +122,14 @@ html, body {
 	width: 50%;
 }
 
+.editor {
+	border-right: 1px solid #ddd;
+}
+
+.inspector {
+	background: #fcfcfc;
+	border-left: 1px solid #ddd;
+}
 
 .editor > div {
 	display: -webkit-flex;
@@ -54,16 +138,35 @@ html, body {
 	flex-direction: column;
 }
 
-.inspector .object .lines {
+.inspector .object .lines-wrapper {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
+}
+
+.lines {
+	margin: 8px;
+	border: 2px solid #ddd;
+	padding: 4px 0;
+	-webkit-flex: 1 1;
+	flex: 1 1;
+
+	background: #f0f0f0;
+
 	overflow-x: auto;
 	overflow-y: auto;
+
+	box-shadow: inset 0px 0px 8px rgba(0,0,0,0.02);
 }
 
 .object-code-line {
 	display: -webkit-flex;
 	display: flex;
+	padding: 0 8px;
 
-	font-family: monospace;
+	font-family: 'Inconsolata';
+	font-size: 14px;
 }
 
 .object-code-line .line-no {
@@ -81,14 +184,23 @@ html, body {
 }
 
 .object-code-line.highlighted {
-	background: #eea;
+	background: #9de0ad;
+	margin: -1px 0;
+	border-top: 1px solid #45ada8;
+	border-bottom: 1px solid #45ada8;
+}
+
+.object-code-line.highlighted + .object-code-line.highlighted {
+	margin-top: -2px;
 }
 
 .registers {
 	display: -webkit-flex;
 	display: flex;
+	padding-bottom: 8px;
 
-	font-family: monospace;
+	font-family: 'Inconsolata';
+	font-size: 14px;
 
 	max-width: 420px;
 	margin: 0 auto;
@@ -102,9 +214,18 @@ html, body {
 	width: 70%;
 }
 
+.registers .label {
+	padding-left: 4px;
+	background: #f0f0f0;
+}
+
 .registers .register {
 	display: -webkit-flex;
 	display: flex;
+}
+
+.registers .register div {
+	padding: 2px 0;
 }
 
 .registers .register .value_hex,
@@ -113,7 +234,9 @@ html, body {
 }
 
 .registers .register .label {
-	width: 45px;
+	width: 36px;
+	margin-right: 8px;
+	padding-left: 8px;
 }
 
 .registers .flags,
@@ -130,10 +253,28 @@ html, body {
 }
 
 .registers .flags .label {
-	width: 25px;
+	width: 19px;
+	margin-right: 6px;
 }
 
 .registers .status .label,
 .registers .pc .label {
-	width: 40px;
+	width: 34px;
+	margin-right: 6px;
+}
+
+.registers h3 {
+	margin: 0 0 6px 0;
+	padding: 2px 0 2px 0;
+	border-bottom: 1px solid #ddd;
+
+	font-family: 'Source Sans Pro';
+	font-weight: 600;
+	font-size: 13px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+h3.status_header {
+	margin-top: 12px;
 }

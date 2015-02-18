@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>y86 Simulator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/codemirror.css">
     <link rel="stylesheet" href="css/index.css">
   </head>
@@ -67,9 +68,9 @@ Stack:</script>
         <div class="header">
             <h1>Y86 Simulator</h1>
             <div class="actions">
-                <button class="compile">Compile</button>
-                <button class="continue">Start</button>
-                <button class="step">Step</button>
+                <button class="compile"><i class="fa fa-bolt"></i> Compile</button>
+                <button class="step"><i class="fa fa-angle-right"></i> Step</button>
+                <button class="continue"><i class="fa fa-angle-double-right"></i> <span>Start</span></button>
             </div>
         </div>
         <div class="app-body">
@@ -91,7 +92,9 @@ Stack:</script>
 
     <script type="text/template" id="tmpl_object_code">
         <h2>Object code</h2>
-        <div class="lines"></div>
+        <div class="lines-wrapper">
+            <div class="lines"></div>
+        </div>
     </script>
 
     <script type="text/template" id="tmpl_object_code_line">
@@ -107,6 +110,7 @@ Stack:</script>
 
     <script type="text/template" id="tmpl_registers">
         <div class="column register_column">
+            <h3>Registers</h3>
             <div class="register">
                 <div class="label">%eax</div>
                 <div class="value_hex"><%= eax_hex %></div>
@@ -118,14 +122,14 @@ Stack:</script>
                 <div class="value_dec"><%= ecx_dec %></div>
             </div>
             <div class="register">
-                <div class="label">%ebx</div>
-                <div class="value_hex"><%= ebx_hex %></div>
-                <div class="value_dec"><%= ebx_dec %></div>
-            </div>
-            <div class="register">
                 <div class="label">%edx</div>
                 <div class="value_hex"><%= edx_hex %></div>
                 <div class="value_dec"><%= edx_dec %></div>
+            </div>
+            <div class="register">
+                <div class="label">%ebx</div>
+                <div class="value_hex"><%= ebx_hex %></div>
+                <div class="value_dec"><%= ebx_dec %></div>
             </div>
             <div class="register">
                 <div class="label">%ebp</div>
@@ -149,6 +153,7 @@ Stack:</script>
             </div>
         </div>
         <div class="column status_column">
+            <h3>Flags</h3>
             <div class="flags">
                 <div class="flag">
                     <div class="label">SF</div>
@@ -163,6 +168,7 @@ Stack:</script>
                     <div class="value"><%= of %></div>
                 </div>
             </div>
+            <h3 class="status_header">Status</h3>
             <div class="status">
                 <div class="label">STAT</div>
                 <div class="value"><%= stat %></div>
