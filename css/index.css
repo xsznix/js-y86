@@ -64,3 +64,7 @@ html, body {
 	width: 120px;
 	min-width: 120px;
 }
+
+.object-code-line.highlighted {
+	background: #ffe;
+}

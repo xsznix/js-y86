@@ -8,7 +8,8 @@ var AppView = Backbone.View.extend({
 	},
 
 	events: {
-		'click .run': 'run'
+		'click .run': 'run',
+		'click .step': 'step'
 	}, // TODO
 
 	render: function () {
@@ -21,6 +22,11 @@ var AppView = Backbone.View.extend({
 		var obj = ASSEMBLE(this.editor.getSource());
 		this.inspector.setObjectCode(obj);
 		EXECUTE(toByteArray(obj));
-		this.inspector.updateRegisters();
+		Backbone.Events.trigger('app:redraw');
+	},
+
+	step: function () {
+		STEP();
+		Backbone.Events.trigger('app:redraw');
 	}
 });

@@ -4,7 +4,9 @@ var ObjectCodeView = Backbone.View.extend({
 	initialize: function (options) {
 		this.template = _.template($('#tmpl_object_code').html());
 		this.code = options.code;
+		this.highlightedLines = {};
 		this.initLines();
+		this.listenTo(Backbone.Events, 'app:redraw', this.highlightCurrentLine);
 		this.render();
 	},
 
@@ -19,6 +21,21 @@ var ObjectCodeView = Backbone.View.extend({
 		this.code = code;
 		this.initLines();
 		this.render();
+	},
+
+	highlightCurrentLine: function () {
+		var linesToHighlight = this.linesByLineNo[PC] || [];
+		var linesToUnhighlight = this.highlightedLines;
+
+		_.each(linesToHighlight, function ($line) {
+			$line.highlight();
+		});
+
+		_.each(linesToUnhighlight, function ($line) {
+			$line.unhighlight();
+		});
+
+		this.highlightedLines = linesToHighlight;
 	},
 
 	initLines: function () {

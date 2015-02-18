@@ -1,9 +1,9 @@
 // Constants
-var MEM_SIZE = 65536;
+var MEM_SIZE = 0x10000;
 
 // Registers and memory
 var PC 		= 0,
-	REG		= [0, 0, 0, 0, 0, 0, 0, 0],
+	REG		= new Uint32Array(8),
 	STAT	= 'AOK',
 	MEMORY 	= new Uint32Array(MEM_SIZE),
 	SF = 0, ZF = 0, OF = 0,
@@ -31,7 +31,7 @@ function print (x) {
 // Reset
 function RESET() {
 	PC 	= 0;
-	REG	= [0, 0, 0, 0, 0, 0, 0, 0];
+	REG	= new Uint32Array(8);
 	STAT = 'AOK';
 	SF = 0; ZF = 0; OF = 0;
 	ERR = 'AOK';
@@ -240,29 +240,43 @@ function ASSEMBLE (raw) {
 	return result;
 }
 
-//Execute a byte array
+// Execute a byte array
+// TODO: deprecate this
 function EXECUTE (bytearr) {
-	var numbytes = bytearr.length,
-		icode,
-		ilen,
-		instr;
-
 	MEMORY 	= bytearr;
 	STAT	= 'AOK';
 	RESET();
 
-	while (PC < numbytes && STAT === 'AOK') {
-		icode = MEMORY[PC] >> 4;
-		ilen = INSTRUCTION_LEN[icode];
-		instr = MEMORY.slice(PC, PC + ilen);
-		args = DECODE(instr);
-		//print(PC + ': ');
-		//print(args);
-		PC += ilen;
-		INSTR[icode].call(args);
-		//printRegisters(REG);
+	while (PC < MEM_SIZE && STAT === 'AOK') {
+		STEP();
 	}
+
 	return STAT;
+}
+
+// Run until hitting a breakpoint, halting, or erroring
+function RUN () {
+	while (PC < MEM_SIZE && STAT === 'AOK') {
+		STEP();
+	}
+
+	return STAT;
+}
+
+// TODO: eventually, this will become a five-part pipeline
+function STEP () {
+	// Fetch
+	var icode = MEMORY[PC] >> 4;
+	var ilen = INSTRUCTION_LEN[icode];
+	var instr = MEMORY.slice(PC, PC + ilen);
+
+	PC += ilen;
+
+	// Decode
+	var args = DECODE(instr);
+
+	// Execute + Memory + Write Back ???
+	INSTR[icode].call(args);
 }
 
 function hex2arr (str) {
@@ -279,15 +293,15 @@ function toByteArray(str) {
 		line, addr, size, bytearr;
 
 	// Get size of program, pad with 32 bytes at end
-	for (i in lines) {
-		line = lines[i];
-		addr = line.match(/^\s*0x([\da-f]+)/i);
-		if (addr) {
-			size = parseInt(addr[1], 16) + 32;
-		}
-	}
+	// for (i in lines) {
+	// 	line = lines[i];
+	// 	addr = line.match(/^\s*0x([\da-f]+)/i);
+	// 	if (addr) {
+	// 		size = parseInt(addr[1], 16) + 32;
+	// 	}
+	// }
 	// Init array with 0's
-	bytearr = new Uint32Array(Math.max(MEM_SIZE, size));
+	bytearr = new Uint32Array(MEM_SIZE);
 
 	// Set instructions at correct locations
 	for (i in lines) {

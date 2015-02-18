@@ -10,6 +10,7 @@ var InspectorView = Backbone.View.extend({
 		// 		index: i
 		// 	});
 		// }
+		this.listenTo(Backbone.Events, 'app:redraw', this.updateRegisters);
 		this.render();
 	},
 

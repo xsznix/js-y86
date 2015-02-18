@@ -119,3 +119,47 @@ INSTR[11] = function () {
 	REG[4] = valE;
 	REG[this.rA] = valM;
 };
+INSTR[15] = function () {
+	switch(this.fn) {
+		case 0:
+			// BRK
+			STAT = 'DBG';
+			break;
+		case 1:
+			// BRKLE
+			if (SF === 1 || ZF === 1) {
+				STAT = 'DBG';
+			}
+			break;
+		case 2:
+			// BRKL
+			if (SF === 1) {
+				STAT = 'DBG';
+			}
+			break;
+		case 3:
+			// BRKE
+			if (ZF === 1) { 
+				STAT = 'DBG';
+			}
+			break;
+		case 4:
+			// BRKNE
+			if (ZF === 0) { 
+				STAT = 'DBG';
+			}
+			break;
+		case 5:
+			// BRKGE
+			if (ZF === 0 || ZF === 1) { 
+				STAT = 'DBG';
+			}
+			break;
+		case 6:
+			// BRKG
+			if (SF === 0 && ZF === 0) { 
+				STAT = 'DBG';
+			}
+			break;
+	}
+};
