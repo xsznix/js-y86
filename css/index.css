@@ -108,8 +108,9 @@ html, body {
 }
 
 #app .app-body h2 {
+	min-height: 18px;
 	margin: 0;
-	padding: 4px 16px 8px 16px;
+	padding: 4px 16px 6px 16px;
 
 	background: #3498db;
 	color: rgba(255,255,255,0.7);
@@ -126,11 +127,6 @@ html, body {
 .editor h2 {
 	z-index: 1;
 	box-shadow: 2px 0px 0px #3498db;
-}
-
-/* ??? */
-#app .app-body .inspector h2 {
-	padding-bottom: 6px;
 }
 
 .editor, .inspector {
