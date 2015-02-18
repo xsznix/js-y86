@@ -29,9 +29,20 @@ var AppView = Backbone.View.extend({
 		this.listenToOnce(Backbone.Events, 'app:redraw', this.redrawContinueButton);
 	},
 
+	// TODO: this method is too complex. figure out another way to do this.
 	continue: function () {
-		RUN();
-		Backbone.Events.trigger('app:redraw');
+		if (STAT === 'HLT') {
+			RESET();
+			this.$('.continue span').text('Start');
+
+			Backbone.Events.trigger('app:redraw');
+			this.listenToOnce(Backbone.Events, 'app:redraw', this.redrawContinueButton);
+		} else {
+			RUN();
+			Backbone.Events.trigger('app:redraw');
+			if (STAT === 'HLT')
+				this.redrawContinueButton();
+		}
 	},
 
 	step: function () {
@@ -40,6 +51,9 @@ var AppView = Backbone.View.extend({
 	},
 
 	redrawContinueButton: function () {
-		this.$('.continue span').text('Continue');
+		if (STAT === 'HLT')
+			this.$('.continue span').text('Reset');
+		else
+			this.$('.continue span').text('Continue');
 	}
 });
