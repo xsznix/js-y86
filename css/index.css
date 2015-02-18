@@ -31,7 +31,7 @@ html, body {
 	z-index: 2;
 	display: -webkit-flex;
 	display: flex;
-	padding: 0 36px;
+	padding: 0 24px 0 36px;
 
 	background: #2980b9;
 	color: #fff;
@@ -47,12 +47,22 @@ html, body {
 	font-size: 24px;
 }
 
-#app .header .actions {
+#app .header .actions,
+#app .header .links {
 	display: -webkit-flex;
 	display: flex;
 }
 
-#app .header button {
+#app .header .links {
+	-webkit-flex: 1 1;
+	flex: 1 1;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
+}
+
+#app .header button,
+#app .header .links a {
+	display: block;
 	padding: 0 12px;
 	background: none;
 	border: none;
@@ -62,15 +72,25 @@ html, body {
 	font-family: 'Source Sans Pro';
 	font-size: 16px;
 	font-weight: 300;
+	text-decoration: none;
 
 	cursor: pointer;
+}
+
+#app .header .links a {
+	padding-top: 14px;
 }
 
 #app .header button .fa {
 	margin-right: 4px;
 }
 
-#app .header button:hover {
+#app .header .links a .fa {
+	margin-left: 6px;
+}
+
+#app .header button:hover,
+#app .header .links a:hover {
 	background: rgba(255,255,255,0.1);
 }
 
