@@ -29,7 +29,7 @@ var RegistersView = Backbone.View.extend({
 			zf: ZF,
 			of: OF,
 			stat: STAT,
-			pc: '0x' + PC.toString(16)
+			pc: '0x' + padHex(PC.toString(16), 4)
 		};
 
 		this.$el.empty().append(this.template(registers));

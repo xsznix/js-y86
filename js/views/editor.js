@@ -12,6 +12,8 @@ var EditorView = Backbone.View.extend({
 
 		this.$editor = this.$('.code');
 		this.editor = ace.edit(this.$editor.get(0));
+		this.editor.setTheme('ace/theme/textmate');
+		this.editor.getSession().setMode('ace/mode/y86');
 		this.resizeEditor();
 	},
 

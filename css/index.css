@@ -224,8 +224,11 @@ html, body {
 	display: flex;
 }
 
-.registers .register div {
-	padding: 2px 0;
+.registers .register div,
+.registers .status div,
+.registers .pc div {
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 .registers .register .value_hex,

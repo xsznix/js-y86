@@ -184,7 +184,7 @@ Stack:</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
 
-    <script src="js/ace-builds/src/ace.js"></script>
+    <script src="js/ace/ace.js"></script>
 
     <script src="js/y86.js"></script>
     <script src="js/assem.js"></script>
@@ -200,27 +200,6 @@ Stack:</script>
     <script src="js/views/objcode.js"></script>
 
     <script>
-        // var source = CodeMirror.fromTextArea($('#y86').get(0));
-
-        // //Assemble when button is clicked
-        // $('#assem').click(function(){
-        //  var assembled = ASSEMBLE($('#y86').val());
-        //  $('#assembled').val(assembled);
-        // });
-
-        // $('#exec').click(function(){
-        //  var result = toByteArray($('#assembled').val()),
-        //      registers = '';
-        //  result = EXECUTE(result);
-        //  registers = reg2str(REG);
-    
-        //  $('#result').val(registers + '\n' + result);
-        // });
-
-        // $('#assemexec').click(function(){
-        //  $('#assem').click();
-        //  $('#exec').click(); 
-        // });
         $(function () {
             var app = new AppView();
             $('#app').append(app.$el);
