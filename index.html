@@ -208,6 +208,11 @@ Stack:</script>
             var app = new AppView();
             $('#app').append(app.$el);
         });
+
+        // Don't lose unsaved work!
+        window.onbeforeunload = function () {
+            return 'All unsaved work will be lost!';
+        }
     </script>
 
   </body>
