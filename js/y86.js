@@ -240,6 +240,10 @@ function INIT (obj) {
 
 // Run until hitting a breakpoint, halting, or erroring
 function RUN () {
+	// Resume from breakpoint, if applicable
+	if (STAT === 'DBG')
+		STAT = 'AOK';
+
 	while (PC < MEM_SIZE && STAT === 'AOK') {
 		STEP();
 	}
