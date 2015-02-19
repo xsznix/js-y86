@@ -23,7 +23,7 @@ define("ace/mode/y86_highlight_rules",
 	            "regex": /halt|nop|rrmovl|cmovle|cmovl|cmove|cmovne|cmovge|cmovg|irmovl|rmmovl|mrmovl|addl|subl|xorl|andl|jmp|jle|jl|je|jne|jge|jg|call|ret|pushl|popl|brk|brkle|brkl|brke|brkne|brkge|brkg/
 	        }, {
 	            "token": ["variable.language", "register"],
-	            "regex": /%(eax|ebx|ecx|edx|ebp|esp|esi|edu)/
+	            "regex": /%(eax|ebx|ecx|edx|ebp|esp|esi|edi)/
 	        }, {
 	            "token": "constant.number",
 	            "regex": /\$?\-?([0-9]+|\0\x[0-9a-f]+)/
