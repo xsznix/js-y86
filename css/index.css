@@ -310,7 +310,7 @@ h3.status_header {
 .memory > div {
 	display: -webkit-flex;
 	display: flex;
-	-flex-direction: column;
+	-webkit-flex-direction: column;
 	flex-direction: column;
 }
 
