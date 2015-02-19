@@ -62,7 +62,6 @@ Main:
 
 	halt
 
-# Resets registers.
 ResetRegisters:
 	xorl %eax, %eax
 	xorl %ebx, %ebx
@@ -70,6 +69,7 @@ ResetRegisters:
 	xorl %edx, %edx
 	xorl %esi, %esi
 	xorl %edi, %edi
+	ret
 
 # Creates a new stack frame and destroys it.
 ZeroArgs:
