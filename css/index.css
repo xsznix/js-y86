@@ -297,7 +297,9 @@ h3.status_header {
 }
 
 .memory {
-	width: 230px;
+	-webkit-flex: 0 0 auto;
+	flex: 0 0 auto;
+	width: 198px;
 
 	background: #fcfcfc;
 
@@ -389,7 +391,13 @@ h3.status_header {
 }
 
 .memory .esp {
-	right: 4px;
+	right: 5px;
 
 	color: #16a085;
+}
+
+@media screen and (max-width: 1023px) {
+	.registers .register .value_dec {
+		display: none;
+	}
 }
