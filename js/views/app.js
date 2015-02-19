@@ -3,6 +3,7 @@ var AppView = Backbone.View.extend({
 		this.template = _.template($('#tmpl_app').html());
 		this.editor = new EditorView();
 		this.inspector = new InspectorView();
+		this.memview = new MemoryView();
 
 		this.render();
 	},
@@ -17,6 +18,7 @@ var AppView = Backbone.View.extend({
 		this.$el.empty().append(this.template());
 		this.$('.editor').empty().append(this.editor.$el);
 		this.$('.inspector').empty().append(this.inspector.$el);
+		this.$('.memory').empty().append(this.memview.$el);
 	},
 
 	compile: function () {

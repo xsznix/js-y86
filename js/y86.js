@@ -5,12 +5,12 @@ var MEM_SIZE = 0x10000;
 var PC 		= 0,
 	REG		= new Uint32Array(8),
 	STAT	= 'AOK',
-	MEMORY 	= new Uint32Array(MEM_SIZE),
+	MEMORY 	= new Uint8Array(MEM_SIZE),
 	SF = 0, ZF = 0, OF = 0,
 	ERR = 'AOK';
 
 // Uint32Arrays are not actually arrays
-Uint32Array.prototype.slice = function () {
+Uint8Array.prototype.slice = function () {
 	return Array.prototype.slice.apply(this, arguments);
 }
 
@@ -285,7 +285,7 @@ function toByteArray(str) {
 	// 	}
 	// }
 	// Init array with 0's
-	bytearr = new Uint32Array(MEM_SIZE);
+	bytearr = new Uint8Array(MEM_SIZE);
 
 	// Set instructions at correct locations
 	for (i in lines) {

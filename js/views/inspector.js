@@ -5,11 +5,6 @@ var InspectorView = Backbone.View.extend({
 		this.objectCode = [];
 		this.registers = new RegistersView();
 		this.$objcode = new ObjectCodeView(this.objectCode);
-		// for (var i = 0; i < MEM_SIZE; i++) {
-		// 	this.bytes[i] = new MemByteView({
-		// 		index: i
-		// 	});
-		// }
 		this.listenTo(Backbone.Events, 'app:redraw', this.updateRegisters);
 		$(window).on('resize', this.resizeObjectView.bind(this));
 		this.render();
@@ -17,13 +12,6 @@ var InspectorView = Backbone.View.extend({
 
 	render: function () {
 		this.$el.empty().html(this.template());
-
-		// var bytesContainer = this.$('.memory');
-		// var fragment = document.createDocumentFragment();
-		// _.each(this.bytes, function (b) {
-		// 	fragment.appendChild(b.$el[0]);
-		// });
-		// bytesContainer.append(fragment);
 
 		this.$('.object').append(this.$objcode.$el);
 		this.$('.registers-wrapper').append(this.registers.$el);

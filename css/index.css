@@ -101,8 +101,6 @@ html, body {
 	-webkit-flex: 1 1;
 	flex: 1 1;
 
-	margin: 0 24px;
-	
 	background: #fff;
 	box-shadow: 0px 0px 24px #aaa;
 }
@@ -296,4 +294,102 @@ html, body {
 
 h3.status_header {
 	margin-top: 12px;
+}
+
+.memory {
+	width: 230px;
+
+	background: #fcfcfc;
+
+	font-family: 'Inconsolata';
+	font-size: 14px;
+}
+
+.memory > div {
+	display: -webkit-flex;
+	display: flex;
+	-flex-direction: column;
+	flex-direction: column;
+}
+
+.memory .mem-header,
+.memory .word {
+	display: -webkit-flex;
+	display: flex;
+}
+
+.memory .mem-header {
+	margin: 5px 8px 0 5px;
+
+	color: #444;
+
+	font-family: 'Source Sans Pro';
+	font-weight: 700;
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.memory .mem-words-wrapper {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
+}
+
+.memory .mem-words {
+	margin: 2px 8px 8px 0;
+	border: 2px solid #ccc;
+
+	background: #f0f0f0;
+}
+
+.memory .mem-words {
+	overflow-y: auto;
+}
+
+.memory .address {
+	width: 35px;
+}
+
+.memory .value {
+	margin-left: 5px;
+}
+
+.memory .mem-header .value {
+	margin-left: 6px;
+}
+
+.memory .mem-words .address {
+	padding-left: 4px;
+
+	background: #ddd;
+}
+
+.memory .stack-pointers {
+	position: relative;
+}
+
+.memory .ebp,
+.memory .esp {
+	position: absolute;
+	top: 0;
+	width: 36px;
+
+	font-weight: 700;
+
+	-webkit-transition: top 400ms ease-out;
+	-o-transition: top 400ms ease-out;
+	transition: top 400ms ease-out;
+}
+
+.memory .ebp {
+	right: 44px;
+
+	color: #c0392b;
+}
+
+.memory .esp {
+	right: 4px;
+
+	color: #16a085;
 }
