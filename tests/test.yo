@@ -1,8 +1,0 @@
- | # Execution begins at address 0
- 0x000: | .pos 0
- 0x000: 30f400010000 | init: irmovl Stack, %esp # Set up stack pointer
- 0x00c: 405000000000 | init: irmovl Stack, %esp # Set up stack pointer
- 0x013: 00 | halt # Terminate program
- | # The stack starts here and grows to lower addresses
- 0x100: | .pos 0x100
- 0x100: | Stack:
