@@ -1,0 +1,12 @@
+.pos 0
+Init:
+    irmovl Stack, %ebp
+    irmovl Stack, %esp
+    jmp Main
+
+.pos 0x100
+Stack:
+
+.pos 0x104
+Main:
+    

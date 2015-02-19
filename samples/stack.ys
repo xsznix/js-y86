@@ -1,0 +1,80 @@
+.pos 0
+Init:
+    irmovl Stack, %ebp
+    irmovl Stack, %esp
+    jmp Main
+
+.pos 0x100
+Stack:
+
+.pos 0x104
+
+# __fastcall int Multiply (int x, int y)
+# x is passed in as %ecx, y is passed in as %edx.
+Multiply:
+    # Set up stack frame.
+    pushl %ebp
+    rrmovl %esp, %ebp
+    pushl %esi
+    
+    irmovl $-1, %esi  # esi = -1
+    xorl %eax, %eax   # eax = 0
+
+    # Skip multiply loop silently if multiplying by <= 0.
+    andl %edx, %edx
+    jle Multiply_End
+
+Multiply_Loop:
+    addl %ecx, %eax   # eax += ecx
+    addl %esi, %edx   # edx -= 1
+    jne Multiply_Loop # if (edx != 0) goto Multiply_Loop
+
+Multiply_End:
+    # Clean up stack frame.
+    popl %esi
+    rrmovl %ebp, %esp
+    popl %ebp
+    ret
+
+# _cdecl int pow (int base, int exp)
+Pow:
+    # Set up stack frame.
+    pushl %ebp
+    rrmovl %esp, %ebp
+    
+    irmovl $-1, %esi      # esi = -1
+    
+    # We'll use %esi to demonstrate callee-save in Multiply,
+    # since Multiply uses the callee-save %esi register.
+    mrmovl 8(%ebp), %ecx  # ecx = base
+    mrmovl 12(%ebp), %edi # edi = exp
+    
+    rrmovl %ecx, %edx     # edx = base
+    addl %esi, %edi       # edi -= 1
+
+Pow_Loop:
+    pushl %edx
+    call Multiply         # eax = ecx * edx
+    popl %edx
+    addl %esi, %edi       # edi -= 1
+    rrmovl %eax, %ecx     # ecx = eax
+    jne Pow_Loop          # if (edi != 0) goto Pow_Loop
+
+Pow_End:
+    # Clean up stack frame.
+    rrmovl %ebp, %esp
+    popl %ebp
+    ret
+
+Main:
+    brk
+
+    # eax = Pow(3, 4)
+    irmovl $3, %eax # base
+    irmovl $4, %ebx # exponent
+    pushl %ebx
+    pushl %eax
+    call Pow
+    rrmovl %ebp, %esp
+
+    halt
