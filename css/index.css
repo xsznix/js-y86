@@ -160,6 +160,7 @@ html, body {
 }
 
 .lines {
+	position: relative;
 	margin: 8px;
 	border: 2px solid #ddd;
 	padding: 4px 0;
@@ -177,6 +178,7 @@ html, body {
 .object-code-line {
 	display: -webkit-flex;
 	display: flex;
+	height: 15px;
 	padding: 0 8px;
 
 	font-family: 'Inconsolata';

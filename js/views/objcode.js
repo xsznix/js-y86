@@ -14,9 +14,10 @@ var ObjectCodeView = Backbone.View.extend({
 		if (!this.rendered) {
 			this.$el.empty().append(this.template());
 			this.rendered = true;
+			this.$lineContainer = this.$('.lines');
 		}
 
-		this.$('.lines').empty().append(_.map(this.$lines, function ($line) {
+		this.$lineContainer.empty().append(_.map(this.$lines, function ($line) {
 			return $line.$el;
 		}));
 	},
@@ -31,15 +32,31 @@ var ObjectCodeView = Backbone.View.extend({
 		var linesToHighlight = this.linesByLineNo[PC] || [];
 		var linesToUnhighlight = this.highlightedLines;
 
-		_.each(linesToHighlight, function ($line) {
-			$line.highlight();
-		});
-
 		_.each(linesToUnhighlight, function ($line) {
 			$line.unhighlight();
 		});
 
+		_.each(linesToHighlight, function ($line) {
+			$line.highlight();
+		});
+
 		this.highlightedLines = linesToHighlight;
+
+		// scroll into view
+		var lineToScrollTo = linesToHighlight[linesToHighlight.length - 1];
+		if (!lineToScrollTo)
+			return;
+
+		var $lineToScrollTo = lineToScrollTo.$el;
+
+		var top = $lineToScrollTo.position().top;
+		if (top < 0)
+			this.$lineContainer.scrollTop($lineToScrollTo.index() * 15 - 40);
+		else {
+			var linesHeight = this.$lineContainer.height();
+			if (top > linesHeight - 15)
+				this.$lineContainer.scrollTop($lineToScrollTo.index() * 15 - linesHeight + 55);
+		}
 	},
 
 	initLines: function () {

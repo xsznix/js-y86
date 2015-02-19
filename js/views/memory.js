@@ -56,10 +56,35 @@ var MemoryView = Backbone.View.extend({
 	},
 
 	updateStackPointers: function () {
-		var ebp = REG[5] / 4;
-		var esp = REG[4] / 4;
-		this.$ebp.css('top', (15 * ebp) + 'px');
-		this.$esp.css('top', (15 * esp) + 'px');
+		var ebp = REG[5] / 4 * 15;
+		var esp = REG[4] / 4 * 15;
+		var old_ebp = this.$ebp.position().top;
+		var old_esp = this.$esp.position().top;
+		var ebp_changed = false, esp_changed = false;
+
+		if (ebp !== old_ebp && (ebp_changed = true))
+			this.$ebp.css('top', ebp + 'px');
+		if (esp !== old_esp && (esp_changed = true))
+			this.$esp.css('top', esp + 'px');
+		
+		if (ebp_changed || esp_changed) {
+			var containerHeight = this.$wordContainer.height();
+			var scrollTop = this.$wordContainer.scrollTop();
+			var newScroll = null;
+
+			var max = ebp_changed ? esp_changed ? Math.max(ebp, esp) : ebp : esp;
+			if (max > scrollTop + containerHeight - 15)
+				newScroll = max - containerHeight + 55;
+
+			// Prefer scrolling to the higher of the two possible changed
+			// values, if necessary.
+			var min = ebp_changed ? esp_changed ? Math.min(ebp, esp) : ebp : esp;
+			if (min < scrollTop + 15)
+				newScroll = min - 40;
+
+			if (newScroll !== null)
+				this.$wordContainer.scrollTop(newScroll);
+		}
 	}
 });
 
