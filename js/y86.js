@@ -108,18 +108,18 @@ function evalArgs(list, args, symbols){
 
 				// If negative number...
 				if (args[i][0] === '-') {
-					args[i] = 0 - eval(args[i].substr(1));
+					args[i] = 0 - parseNumberLiteral(args[i].substr(1));
 					args[i] = (args[i] >> 24 & 0xFF).toString(16) + (args[i] & 0x00FFFFFF).toString(16);
 					result['V'] = toBigEndian(padHex(args[i], 8));
 				} else {
-					result['V'] = toBigEndian(padHex(eval(args[i]), 8));
+					result['V'] = toBigEndian(padHex(parseNumberLiteral(args[i]), 8));
 				}
 				result['D'] = result['V'];
 			}
 		} else if (item === 'Dest') {
 			result['Dest'] = toBigEndian(padHex(symbols[args[i]].toString(16), 8));
 		} else if (item === 'D(rB)') {
-			result['D'] = toBigEndian(padHex(eval(args[i].replace(/\(.*/, '')), 8));
+			result['D'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace(/\(.*/, '')), 8));
 			result['rB'] = num2reg.indexOf(args[i].replace(/^.*\((.*)\)/, '$1'));
 		}
 	}
@@ -189,7 +189,7 @@ function ASSEMBLE (raw) {
 		dir = line.match(/(^\..*?) (.*)/i);
 		if (dir) {
 			if (dir[1] === '.pos') {
-				counter = eval(dir[2]);
+				counter = parseNumberLiteral(dir[2]);
 			} else if (dir[1] === '.align') {
 				counter = Math.ceil(counter / 4) * 4;
 			}
@@ -198,7 +198,7 @@ function ASSEMBLE (raw) {
 		result[i] = ' 0x' + padHex(counter, 3) + ': ';		
 		if (dir) {
 			if (dir[1] === '.long') {
-				result[i] += toBigEndian(padHex(eval(dir[2]), 8)) + ' ';
+				result[i] += toBigEndian(padHex(parseNumberLiteral(dir[2]), 8)) + ' ';
 				counter += 4;
 			}
 			line = line.replace(/(^\..*?) (.*)/i, '');

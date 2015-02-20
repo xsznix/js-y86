@@ -136,6 +136,14 @@ function hexstr2num(h){
 	return parseInt(x, 16);
 }
 
+// Parse a number that is either in base 10 or in base 16 with '0x' in front.
+function parseNumberLiteral (str) {
+	if (str.length > 2 && str.substr(0, 2) === '0x')
+		return parseInt(str, 16);
+	else
+		return parseInt(str, 10);
+}
+
 function padHex(num, width){
 	var result = num ? num.toString(16) : '0';
 	while (result.length < width) {
