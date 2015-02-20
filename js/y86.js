@@ -104,7 +104,12 @@ function evalArgs(list, args, symbols){
 				result['V'] = toBigEndian(padHex(symbols[args[i]], 8));
 				result['D'] = result['V'];
 			} else {
-				result['V'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace('$', '')) >>> 0));
+				try {
+					result['V'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace('$', '')) >>> 0));
+				} catch (e) {
+					// Use 'not a symbol' instead of the more cryptic 'not a number'
+					throw new Error('Undefined symbol: ' + args[i]);
+				}
 				result['D'] = result['V'];
 			}
 		} else if (item === 'Dest') {
@@ -231,7 +236,7 @@ function ASSEMBLE (raw) {
 					if (symbols.hasOwnProperty(dir[1]))
 						value = symbols[dir[1]];
 					else
-						throw new Error('Error while parsing .long directive: unknown symbol ' + dir[1] + ' on line ' + i);
+						throw new Error('Error while parsing .long directive: undefined symbol ' + dir[1] + ' on line ' + i);
 				}
 				result[i][1] = toBigEndian(padHex(value >>> 0, 8));
 				counter += 4;
@@ -245,7 +250,11 @@ function ASSEMBLE (raw) {
 			// Instructions
 			inst = line.match(/^([a-z]+)(.*)/i);
 			if (inst) {
-				result[i][1] = ENCODE(line, symbols);
+				try {
+					result[i][1] = ENCODE(line, symbols);
+				} catch (e) {
+					throw new Error('Line ' + i + ': ' + e.message);
+				}
 			}
 			if (ERR !== 'AOK') {
 				throw new Error('Invalid instruction "' + line + '" on line ' + i);
