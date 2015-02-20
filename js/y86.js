@@ -121,7 +121,11 @@ function evalArgs(list, args, symbols){
 				result['D'] = result['V'];
 			}
 		} else if (item === 'Dest') {
-			result['Dest'] = toBigEndian(padHex(symbols[args[i]].toString(16), 8));
+			try {
+				result['Dest'] = toBigEndian(padHex(symbols[args[i]].toString(16), 8));	
+			} catch (e) {
+				throw new Error('Undefined symbol: ' + args[i]);
+			}
 		} else if (item === 'D(rB)') {
 			result['D'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace(/\(.*/, '')) >>> 0, 8));
 			result['rB'] = getRegCode(args[i].replace(/^.*\((.*)\)/, '$1'));
