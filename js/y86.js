@@ -89,15 +89,23 @@ function DECODE (bytearr) {
 	return args;
 }
 
+function getRegCode (num) {
+	var code = num2reg.indexOf(num);
+	if (code === -1)
+		throw new Error('Not a register: "' + num + '"');
+	else
+		return code.toString(16);
+}
+
 function evalArgs(list, args, symbols){
 	var item, result = {};
 	for (i in list) {
 		item = list[i];
 		if (item === 'rA') {
-			result['rA'] = num2reg.indexOf(args[i]).toString(16);
+			result['rA'] = getRegCode(args[i]);
 		}
 		else if (item === 'rB') {
-			result['rB'] = num2reg.indexOf(args[i]).toString(16);
+			result['rB'] = getRegCode(args[i]);
 		}
 		else if (item === 'V' || item === 'D') {
 			if (symbols.hasOwnProperty(args[i])) {
@@ -116,7 +124,7 @@ function evalArgs(list, args, symbols){
 			result['Dest'] = toBigEndian(padHex(symbols[args[i]].toString(16), 8));
 		} else if (item === 'D(rB)') {
 			result['D'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace(/\(.*/, '')) >>> 0, 8));
-			result['rB'] = num2reg.indexOf(args[i].replace(/^.*\((.*)\)/, '$1'));
+			result['rB'] = getRegCode(args[i].replace(/^.*\((.*)\)/, '$1'));
 		}
 	}
 	return result;
