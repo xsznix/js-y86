@@ -45,6 +45,6 @@ var InspectorView = Backbone.View.extend({
 
 	resizeObjectView: function () {
 		var $lines = this.$objcode.$('.lines-wrapper');
-		$lines.css('height', ($(window).height() - $lines.position().top - this.$('.registers-wrapper').height()) + 'px');
+		$lines.height($(window).height() - $lines.position().top - this.$('.registers-wrapper').height());
 	}
 });

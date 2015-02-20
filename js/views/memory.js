@@ -24,8 +24,15 @@ var MemoryView = Backbone.View.extend({
 		this.$wordContainerWrapper = this.$('.mem-words-wrapper');
 		this.$wordContainer = this.$('.mem-words');
 		this.$wordContainer.on('scroll', this.autoload.bind(this));
-		setTimeout(this.render64.bind(this), 0);
-		setTimeout(this.resize.bind(this), 0);
+		setTimeout(function () {
+			this.render64();
+			this.resize();
+
+			// Widen the memory panel if there's a scroll bar.
+			var width = 386 - this.$('.stack-pointers').width()
+			this.$el.width(width);
+			this.$el.parent().width(width);
+		}.bind(this), 0);
 	},
 
 	render64: function () {
@@ -43,8 +50,8 @@ var MemoryView = Backbone.View.extend({
 	},
 
 	resize: function () {
-		this.$wordContainerWrapper.css('height',
-			($(window).height() - this.$wordContainerWrapper.position().top) + 'px');
+		this.$wordContainerWrapper.height(
+			$(window).height() - this.$wordContainerWrapper.position().top);
 	},
 
 	autoload: function (evt) {

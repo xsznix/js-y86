@@ -22,6 +22,6 @@ var EditorView = Backbone.View.extend({
 	},
 
 	resizeEditor: function () {
-		this.$editor.css('height', ($(window).height() - this.$editor.position().top) + 'px');
+		this.$editor.height($(window).height() - this.$editor.position().top);
 	}
 });
