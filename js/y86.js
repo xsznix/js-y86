@@ -178,53 +178,62 @@ function ASSEMBLE (raw) {
 			result[i] = ' ';
 			continue;
 		}
-		// Look for symbol and add to symbols
-		sym = line.match(/(^.*?):/);
-		if (sym) {
-			symbols[sym[1]] = counter;
-			line = line.replace(/^.*?:\s*/i, '');
-			//print('SYMBOL ' + sym[1] + ' at ' + counter);
-		}
-		// Look for directive
-		dir = line.match(/(^\..*?) (.*)/i);
-		if (dir) {
-			if (dir[1] === '.pos') {
-				counter = parseNumberLiteral(dir[2]);
-			} else if (dir[1] === '.align') {
-				counter = Math.ceil(counter / 4) * 4;
+
+		try {
+			// Look for symbol and add to symbols
+			sym = line.match(/(^.*?):/);
+			if (sym) {
+				symbols[sym[1]] = counter;
+				line = line.replace(/^.*?:\s*/i, '');
+				//print('SYMBOL ' + sym[1] + ' at ' + counter);
 			}
-		}
-		// Add to result str
-		result[i] = ' 0x' + padHex(counter, 3) + ': ';		
-		if (dir) {
-			if (dir[1] === '.long') {
-				result[i] += toBigEndian(padHex(parseNumberLiteral(dir[2]), 8)) + ' ';
-				counter += 4;
+			// Look for directive
+			dir = line.match(/(^\..*?) (.*)/i);
+			if (dir) {
+				if (dir[1] === '.pos') {
+					counter = parseNumberLiteral(dir[2]);
+				} else if (dir[1] === '.align') {
+					counter = Math.ceil(counter / 4) * 4;
+				}
 			}
-			line = line.replace(/(^\..*?) (.*)/i, '');
+			// Add to result str
+			result[i] = ' 0x' + padHex(counter, 3) + ': ';		
+			if (dir) {
+				if (dir[1] === '.long') {
+					result[i] += toBigEndian(padHex(parseNumberLiteral(dir[2]), 8)) + ' ';
+					counter += 4;
+				}
+				line = line.replace(/(^\..*?) (.*)/i, '');
+			}
+			// Move counter
+			inst = line.match(/(^[a-z]+)/i);
+			lines[i] = line;
+			if (inst) {
+				icode = inst2num[inst[1]];
+				counter += INSTRUCTION_LEN[icode];
+			}
+			step = 0;
+		} catch (e) {
+			return 'Error while parsing symbols and directives on line ' + i + ': ' + e;
 		}
-		// Move counter
-		inst = line.match(/(^[a-z]+)/i);
-		lines[i] = line;
-		if (inst) {
-			icode = inst2num[inst[1]];
-			counter += INSTRUCTION_LEN[icode];
-		}
-		step = 0;
 	}
 	// Assemble each instructions
 	counter = 0;
 	for (i in lines) {
-		line = lines[i];
-		inst = line.match(/^([a-z]+)(.*)/i);
-		if (inst) {
-			result[i] += ENCODE(line, symbols) + ' ';
+		try {
+			line = lines[i];
+			inst = line.match(/^([a-z]+)(.*)/i);
+			if (inst) {
+				result[i] += ENCODE(line, symbols) + ' ';
+			}
+			if (ERR !== 'AOK') {
+				//print('Invalid instruction at ' + counter);
+				return 'Invalid instruction "' + line + '" on line ' + (counter + 1);
+			}
+			result[counter] += '|' + (raw[counter] !== '' ? ' ' + raw[counter] : '');
+		} catch (e) {
+			return 'Error while assembling instructions on line ' + i + ': ' + e;
 		}
-		if (ERR !== 'AOK') {
-			//print('Invalid instruction at ' + counter);
-			return 'Invalid instruction "' + line + '" on line ' + (counter + 1);
-		}
-		result[counter] += '|' + (raw[counter] !== '' ? ' ' + raw[counter] : '');
 		counter++;
 	}
 	result = result.join('\n');

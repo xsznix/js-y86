@@ -29,16 +29,19 @@ var InspectorView = Backbone.View.extend({
 			var hasCode = true;
 
 			var lineno_idx = line.indexOf(':');
+			var hasLineno = line.match(/^0x[\da-f]+:/);
 			var lineno = '';
-			if (lineno_idx !== -1)
+			if (hasLineno && lineno_idx !== -1)
 				lineno = line.substring(1, lineno_idx);
 			else
 				hasCode = false;
 
 			var source_idx = line.indexOf('|');
 			var source = '';
-			if (source_idx + 1 < line.length)
+			if (hasCode && source_idx + 1 < line.length)
 				source = line.substr(source_idx + 2);
+			else if (!hasLineno)
+				source = line;
 			else
 				hasCode = false;
 

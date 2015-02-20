@@ -138,7 +138,9 @@ function hexstr2num(h){
 
 // Parse a number that is either in base 10 or in base 16 with '0x' in front.
 function parseNumberLiteral (str) {
-	if (str.length > 2 && str.substr(0, 2) === '0x')
+	if (isNaN(str))
+		throw new Error('Not a number: ' + str);
+	else if (str.length > 2 && str.substr(0, 2) === '0x')
 		return parseInt(str, 16);
 	else
 		return parseInt(str, 10);
