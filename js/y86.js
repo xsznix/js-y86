@@ -110,7 +110,7 @@ function evalArgs(list, args, symbols){
 		} else if (item === 'Dest') {
 			result['Dest'] = toBigEndian(padHex(symbols[args[i]].toString(16), 8));
 		} else if (item === 'D(rB)') {
-			result['D'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace(/\(.*/, '')), 8));
+			result['D'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace(/\(.*/, '')) >>> 0, 8));
 			result['rB'] = num2reg.indexOf(args[i].replace(/^.*\((.*)\)/, '$1'));
 		}
 	}

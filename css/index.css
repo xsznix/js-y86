@@ -77,6 +77,11 @@ html, body {
 	cursor: pointer;
 }
 
+#app .header button.disabled {
+	opacity: 0.25;
+	cursor: default;
+}
+
 #app .header .links a {
 	padding-top: 14px;
 }
@@ -92,6 +97,10 @@ html, body {
 #app .header button:hover,
 #app .header .links a:hover {
 	background: rgba(255,255,255,0.1);
+}
+
+#app .header button.disabled:hover {
+	background: none;
 }
 
 #app .app-body {
