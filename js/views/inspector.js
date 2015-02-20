@@ -25,36 +25,20 @@ var InspectorView = Backbone.View.extend({
 	},
 
 	setObjectCode: function (code) {
-		this.objectCode = _.map(code.split('\n'), function (line) {
-			var hasCode = true;
-
-			var lineno_idx = line.indexOf(':');
-			var hasLineno = line.match(/^0x[\da-f]+:/);
-			var lineno = '';
-			if (hasLineno && lineno_idx !== -1)
-				lineno = line.substring(1, lineno_idx);
-			else
-				hasCode = false;
-
-			var source_idx = line.indexOf('|');
-			var source = '';
-			if (hasCode && source_idx + 1 < line.length)
-				source = line.substr(source_idx + 2);
-			else if (!hasLineno)
-				source = line;
-			else
-				hasCode = false;
-
-			var binary = '';
-			if (hasCode)
-				binary = line.substring(lineno_idx + 2, source_idx - 1);
-
-			return {
-				lineno: lineno,
-				binary: binary,
-				source: source
-			}
-		});
+		if (code.substring(0, 5) === 'Error')
+			this.objectCode = [{
+				lineno: '',
+				binary: '',
+				source: code
+			}];
+		else
+			this.objectCode = _.map(code.split('\n'), function (line) {
+				return {
+					lineno: line.substring(2, 8),
+					binary: line.substring(9, 22),
+					source: line.substring(24)
+				}
+			});
 
 		this.$objcode.setObjectCode(this.objectCode);
 	},

@@ -104,16 +104,7 @@ function evalArgs(list, args, symbols){
 				result['V'] = toBigEndian(padHex(symbols[args[i]], 8));
 				result['D'] = result['V'];
 			} else {
-				args[i] = args[i].replace(/^\$/, '');
-
-				// If negative number...
-				if (args[i][0] === '-') {
-					args[i] = 0 - parseNumberLiteral(args[i].substr(1));
-					args[i] = (args[i] >> 24 & 0xFF).toString(16) + (args[i] & 0x00FFFFFF).toString(16);
-					result['V'] = toBigEndian(padHex(args[i], 8));
-				} else {
-					result['V'] = toBigEndian(padHex(parseNumberLiteral(args[i]), 8));
-				}
+				result['V'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace('$', '')) >>> 0));
 				result['D'] = result['V'];
 			}
 		} else if (item === 'Dest') {
@@ -161,83 +152,120 @@ function ASSEMBLE (raw) {
 		sym, next = 0,
 		counter = 0;
 		raw = raw.split('\n');
+
 	RESET();
+
 	// Clean up raw e.g. remove comments, fix spacing
 	for (i in lines) {
 		line = lines[i];
 		line = line.replace(/#.*/gi, '');
+		line = line.replace(/\/\*.*\*\//gi, '');
 		line = line.replace(/^\s+/gi, '');
 		line = line.replace(/\s+$/gi, '');
 		line = line.replace(/\s+/gi, ' ');
 		lines[i] = line;
 	}
-	// Create symbol table and do directives
-	for (i in lines) {
-		line = lines[i];
-		if (line === '') {
-			result[i] = ' ';
-			continue;
-		}
 
-		try {
+	// Create symbol table and mark memory addresses
+	try {
+		_.each(lines, function (line, i) {
+			result[i] = ['', '', raw[i]];
+			
+			// Ignore empty lines
+			if (line === '')
+				return;
+
+			// Add line number
+			result[i][0] = ['0x' + padHex(counter, 4)];
+
 			// Look for symbol and add to symbols
-			sym = line.match(/(^.*?):/);
+			sym = line.match(/(^.*?):/i);
 			if (sym) {
 				symbols[sym[1]] = counter;
-				line = line.replace(/^.*?:\s*/i, '');
-				//print('SYMBOL ' + sym[1] + ' at ' + counter);
+				// Delete symbol from line
+				lines[i] = line = line.replace(/^.*?:\s*/i, '');
 			}
+
 			// Look for directive
 			dir = line.match(/(^\..*?) (.*)/i);
 			if (dir) {
 				if (dir[1] === '.pos') {
 					counter = parseNumberLiteral(dir[2]);
 				} else if (dir[1] === '.align') {
-					counter = Math.ceil(counter / 4) * 4;
-				}
-			}
-			// Add to result str
-			result[i] = ' 0x' + padHex(counter, 3) + ': ';		
-			if (dir) {
-				if (dir[1] === '.long') {
-					result[i] += toBigEndian(padHex(parseNumberLiteral(dir[2]), 8)) + ' ';
+					var alignTo = parseNumberLiteral(dir[2]);
+					counter = Math.ceil(counter / alignTo) * alignTo;
+				} else if (dir[1] === '.long') {
 					counter += 4;
+				} else {
+					throw new Error('Unknown directive on line ' + i + ': ' + dir[1]);
 				}
-				line = line.replace(/(^\..*?) (.*)/i, '');
 			}
+
 			// Move counter
 			inst = line.match(/(^[a-z]+)/i);
-			lines[i] = line;
 			if (inst) {
 				icode = inst2num[inst[1]];
 				counter += INSTRUCTION_LEN[icode];
 			}
-			step = 0;
-		} catch (e) {
-			return 'Error while parsing symbols and directives on line ' + i + ': ' + e;
-		}
+		});
+	} catch (e) {
+		return 'Error: ' + e.message;
 	}
-	// Assemble each instructions
-	counter = 0;
-	for (i in lines) {
-		try {
-			line = lines[i];
+
+	// Assemble instructions and long directives
+	try {
+		_.each(lines, function (line, i) {
+			// Ignore empty lines
+			if (line.trim() === '')
+				return;
+
+			// Long directives
+			dir = line.match(/^\.long (.*)/i);
+			if (dir) {
+				var value;
+				try {
+					// Try to parse the value as a number literal first...
+					value = parseNumberLiteral(dir[1]);
+				} catch (e) {
+					// ...and if that fails, try to find it in the symbol table
+					if (symbols.hasOwnProperty(dir[1]))
+						value = symbols[dir[1]];
+					else
+						throw new Error('Error while parsing .long directive: unknown symbol ' + dir[1] + ' on line ' + i);
+				}
+				result[i][1] = toBigEndian(padHex(value, 8));
+				counter += 4;
+				return;
+			}
+
+			// Ignore other directives
+			if (line[0] === '.')
+				return;
+
+			// Instructions
 			inst = line.match(/^([a-z]+)(.*)/i);
 			if (inst) {
-				result[i] += ENCODE(line, symbols) + ' ';
+				result[i][1] = ENCODE(line, symbols);
 			}
 			if (ERR !== 'AOK') {
-				//print('Invalid instruction at ' + counter);
-				return 'Invalid instruction "' + line + '" on line ' + (counter + 1);
+				throw new Error('Invalid instruction "' + line + '" on line ' + i);
 			}
-			result[counter] += '|' + (raw[counter] !== '' ? ' ' + raw[counter] : '');
-		} catch (e) {
-			return 'Error while assembling instructions on line ' + i + ': ' + e;
-		}
-		counter++;
+		});
+	} catch (e) {
+		return 'Error: ' + e.message;
 	}
-	result = result.join('\n');
-	return result;
+
+	return _.map(result, function (line) {
+		// 0xXXXX: XXXXXX...
+		var compiledPart = '  ';
+		if (line[0].length)
+			compiledPart += line[0] + ': ' + line[1];
+		
+		// pad to fit 22 characters
+		var padding = new Array(23 - compiledPart.length).join(' ');
+
+		return compiledPart + padding + '| ' + line[2];
+	}).join('\n');
 }
 
 // Initialize the VM with some object code
