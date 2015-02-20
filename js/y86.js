@@ -233,7 +233,7 @@ function ASSEMBLE (raw) {
 					else
 						throw new Error('Error while parsing .long directive: unknown symbol ' + dir[1] + ' on line ' + i);
 				}
-				result[i][1] = toBigEndian(padHex(value, 8));
+				result[i][1] = toBigEndian(padHex(value >>> 0, 8));
 				counter += 4;
 				return;
 			}
