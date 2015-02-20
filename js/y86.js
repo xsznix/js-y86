@@ -195,14 +195,22 @@ function ASSEMBLE (raw) {
 			dir = line.match(/(^\..*?) (.*)/i);
 			if (dir) {
 				if (dir[1] === '.pos') {
-					counter = parseNumberLiteral(dir[2]);
+					try {
+						counter = parseNumberLiteral(dir[2]);
+					} catch (e) {
+						throw new Error('Line ' + (i + 1) + ': ' + e.message);
+					}
 				} else if (dir[1] === '.align') {
-					var alignTo = parseNumberLiteral(dir[2]);
+					try {
+						var alignTo = parseNumberLiteral(dir[2]);
+					} catch (e) {
+						throw new Error('Line ' + (i + 1) + ': ' + e.message);
+					}
 					counter = Math.ceil(counter / alignTo) * alignTo;
 				} else if (dir[1] === '.long') {
 					counter += 4;
 				} else {
-					throw new Error('Unknown directive on line ' + i + ': ' + dir[1]);
+					throw new Error('Unknown directive on line ' + (i + 1) + ': ' + dir[1]);
 				}
 			}
 
@@ -236,7 +244,7 @@ function ASSEMBLE (raw) {
 					if (symbols.hasOwnProperty(dir[1]))
 						value = symbols[dir[1]];
 					else
-						throw new Error('Error while parsing .long directive: undefined symbol ' + dir[1] + ' on line ' + i);
+						throw new Error('Error while parsing .long directive: undefined symbol ' + dir[1] + ' on line ' + (i + 1));
 				}
 				result[i][1] = toBigEndian(padHex(value >>> 0, 8));
 				counter += 4;
@@ -253,11 +261,11 @@ function ASSEMBLE (raw) {
 				try {
 					result[i][1] = ENCODE(line, symbols);
 				} catch (e) {
-					throw new Error('Line ' + i + ': ' + e.message);
+					throw new Error('Line ' + (i + 1) + ': ' + e.message);
 				}
 			}
 			if (ERR !== 'AOK') {
-				throw new Error('Invalid instruction "' + line + '" on line ' + i);
+				throw new Error('Invalid instruction "' + line + '" on line ' + (i + 1));
 			}
 		});
 	} catch (e) {
