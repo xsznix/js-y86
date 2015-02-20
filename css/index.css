@@ -194,8 +194,16 @@ html, body {
 	font-size: 14px;
 }
 
+.object-code-line-error {
+	color: #e74c3c;
+}
+
 .object-code-line .line-no {
 	width: 60px;
+}
+
+.object-code-line-error .line-no {
+	width: 80px;
 }
 
 .object-code-line .binary {

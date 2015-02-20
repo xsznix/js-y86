@@ -28,7 +28,9 @@ var AppView = Backbone.View.extend({
 	compile: function () {
 		var obj = ASSEMBLE(this.editor.getSource());
 		this.inspector.setObjectCode(obj);
-		try { INIT(obj); } catch (e) {} // TODO
+
+		if (obj.errors.length === 0)
+			INIT(obj.obj);
 
 		Backbone.Events.trigger('app:redraw');
 		this.$('.continue span').text('Start');

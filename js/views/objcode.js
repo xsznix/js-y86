@@ -63,29 +63,33 @@ var ObjectCodeView = Backbone.View.extend({
 		this.$lines = [];
 		this.linesByLineNo = {};
 
-		_.each(this.code, function (line) {
-			var $line = new ObjectCodeLineView(line);
-			this.$lines.push($line);
-			if (line.lineno && line.binary.trim().length) {
-				var lineno = parseInt(line.lineno, 16);
-				if (this.linesByLineNo[lineno])
-					this.linesByLineNo[lineno].push($line);
-				else
-					this.linesByLineNo[lineno] = [$line];
-			}
-		}, this);
+		if (this.code)
+			if (this.code.errors.length === 0)
+				_.each(this.code.obj, function (line) {
+					var $line = new ObjectCodeLineView(line);
+					this.$lines.push($line);
+					if (line.lineno && line.binary.trim().length) {
+						var lineno = parseInt(line.lineno, 16);
+						if (this.linesByLineNo[lineno])
+							this.linesByLineNo[lineno].push($line);
+						else
+							this.linesByLineNo[lineno] = [$line];
+					}
+				}, this);
+			else
+				_.each(this.code.errors, function (error) {
+					var $line = new ObjectCodeLineErrorView({ error: error });
+					this.$lines.push($line);
+				}, this);
 	}
 });
 
 var ObjectCodeLineView = Backbone.View.extend({
 	className: 'object-code-line',
+	template: _.template($('#tmpl_object_code_line').html()),
 
 	initialize: function (options) {
-		this.template = _.template($('#tmpl_object_code_line').html());
 		this.updateSource(options);
-		this.$lineno = this.$('.lineno');
-		this.$binary = this.$('.binary');
-		this.$source = this.$('.source');
 		this.render();
 	},
 
@@ -102,5 +106,22 @@ var ObjectCodeLineView = Backbone.View.extend({
 	},
 	unhighlight: function () {
 		this.$el.removeClass('highlighted');
+	}
+});
+
+var ObjectCodeLineErrorView = Backbone.View.extend({
+	className: 'object-code-line object-code-line-error',
+	template: _.template($('#tmpl_object_code_error').html()),
+
+	initialize: function (options) {
+		this.options = {
+			lineno: options.error[0],
+			source: options.error[1]
+		}
+		this.render();
+	},
+
+	render: function () {
+		this.$el.empty().append(this.template(this.options));
 	}
 });
