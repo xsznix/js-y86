@@ -101,7 +101,6 @@ var MemoryView = Backbone.View.extend({
 
 var MemWordView = Backbone.View.extend({
 	className: 'word',
-	template: _.template($('#tmpl_mem_word').html()),
 
 	initialize: function (options) {
 		this.index = options.index;
@@ -111,10 +110,21 @@ var MemWordView = Backbone.View.extend({
 
 	render: function () {
 		var value = this.getValue();
-		this.$el.empty().append(this.template({
-			address: padHex(this.index, 4),
-			value: padHex(value, 8)
-		}));
+		var address_str = padHex(this.index, 4);
+		var value_str = padHex(value, 8);
+
+		// Template is too slow. Create the nodes manually.
+		var frag = document.createDocumentFragment();
+		var $address = document.createElement('div');
+		$address.className = 'address';
+		$address.innerText = address_str;
+		var $value = document.createElement('div');
+		$value.className = 'value';
+		$value.innerText = value_str;
+		frag.appendChild($address);
+		frag.appendChild($value);
+		this.$el[0].appendChild(frag);
+
 		this.lastValue = value;
 	},
 
