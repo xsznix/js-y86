@@ -20,7 +20,11 @@ var MemoryView = Backbone.View.extend({
 		this.$wordContainer = this.$('.mem-words');
 		this.$wordContainer.on('scroll', this.autoload.bind(this));
 		setTimeout(function () {
-			this.render64();
+			// Load as many words as we need to fill the screen, and then some.
+			var windowHeight = $(window).height();
+			while (this.numRendered / 4 * 15 < windowHeight)
+				this.render64();
+
 			this.resize();
 
 			// Widen the memory panel if there's a scroll bar.
