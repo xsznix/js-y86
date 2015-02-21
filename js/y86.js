@@ -299,17 +299,45 @@ function INIT (obj) {
 	RESET();
 }
 
+var STEP_INTERVAL = null, RUN_DONE_CALLBACK;
+
+// Run 256 instructions
+function RUN_STEP () {
+	for (var i = 0; i < 256; i++) {
+		if (PC < MEM_SIZE && STAT === 'AOK')
+			STEP();
+		else {
+			PAUSE();
+			break;
+		}
+	}
+}
+
+// Returns true if the machine is currently running
+function IS_RUNNING () {
+	return STEP_INTERVAL !== null;
+}
+
+// Stops machine execution.
+function PAUSE () {
+	clearInterval(STEP_INTERVAL);
+	STEP_INTERVAL = null;
+	if (STAT === 'AOK')
+		STAT = 'DBG';
+	if (RUN_DONE_CALLBACK)
+		RUN_DONE_CALLBACK();
+	RUN_DONE_CALLBACK = null;
+}
+
 // Run until hitting a breakpoint, halting, or erroring
-function RUN () {
+function RUN (cb) {
 	// Resume from breakpoint, if applicable
 	if (STAT === 'DBG')
 		STAT = 'AOK';
 
-	while (PC < MEM_SIZE && STAT === 'AOK') {
-		STEP();
-	}
-
-	return STAT;
+	// Use fastest available interval the browser can provide
+	STEP_INTERVAL = setInterval(RUN_STEP, 0);
+	RUN_DONE_CALLBACK = cb;
 }
 
 // TODO: eventually, this will become a five-part pipeline
@@ -341,15 +369,6 @@ function toByteArray(str) {
 	var lines = str.split('\n'),
 		line, addr, size, bytearr;
 
-	// Get size of program, pad with 32 bytes at end
-	// for (i in lines) {
-	// 	line = lines[i];
-	// 	addr = line.match(/^\s*0x([\da-f]+)/i);
-	// 	if (addr) {
-	// 		size = parseInt(addr[1], 16) + 32;
-	// 	}
-	// }
-	// Init array with 0's
 	bytearr = new Uint8Array(MEM_SIZE);
 
 	// Set instructions at correct locations

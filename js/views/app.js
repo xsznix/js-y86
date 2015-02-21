@@ -44,17 +44,24 @@ var AppView = Backbone.View.extend({
 	},
 
 	continue: function () {
-		if (STAT === 'AOK' || STAT === 'DBG') {
-			RUN();
-			Backbone.Events.trigger('app:redraw');
+		if (IS_RUNNING()) {
+			PAUSE();
+		} else if (STAT === 'AOK' || STAT === 'DBG') {
+			this.$('.continue span').text('Pause');
+			this.$('.step').addClass('disabled');
+			RUN(this.triggerRedraw);
 		}
 	},
 
 	step: function () {
-		if (STAT === 'AOK' || STAT === 'DBG') {
+		if (!IS_RUNNING() && (STAT === 'AOK' || STAT === 'DBG')) {
 			STEP();
 			Backbone.Events.trigger('app:redraw');
 		}
+	},
+
+	triggerRedraw: function () {
+		Backbone.Events.trigger('app:redraw');
 	},
 
 	redrawButtons: function () {
