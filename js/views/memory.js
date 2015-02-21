@@ -7,11 +7,6 @@ var MemoryView = Backbone.View.extend({
 
 		$(window).on('resize', this.resize.bind(this));
 
-		for (var i = 0; i < MEM_SIZE; i += 4)
-			this.$words.push(new MemWordView({
-				index: i
-			}));
-
 		this.listenTo(Backbone.Events, 'app:redraw', this.updateStackPointers);
 
 		this.render();
