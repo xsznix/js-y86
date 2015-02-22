@@ -10,16 +10,15 @@
     <div id="app"></div>
 
 <script type="text/template" id="default_y86_code">.pos 0
+.pos 0
 Init:
     irmovl Stack, %ebp
     irmovl Stack, %esp
-    jmp Main
 
+Main:
+    
 .pos 0x100
 Stack:
-
-.pos 0x104
-Main:
     </script>
 
     <script type="text/template" id="tmpl_app">
