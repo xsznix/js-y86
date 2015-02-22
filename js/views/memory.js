@@ -83,7 +83,7 @@ var MemoryView = Backbone.View.extend({
 				newScroll = max - containerHeight + 55;
 
 			// Load more memory if needed to show the stack pointers.
-			while (this.numRendered < max / 15 * 4 + 4)
+			while (this.numRendered < MEM_SIZE && this.numRendered < max / 15 * 4 + 4)
 				this.render64();
 
 			// Prefer scrolling to the higher of the two possible changed
