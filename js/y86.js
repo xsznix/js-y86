@@ -289,7 +289,7 @@ function ASSEMBLE (raw) {
 			compiledPart += line[0] + ': ' + line[1];
 		
 		// pad to fit 22 characters
-		var padding = new Array(23 - compiledPart.length).join(' ');
+		var padding = new Array(24 - compiledPart.length).join(' ');
 
 		return compiledPart + padding + '| ' + line[2];
 	}).join('\n');

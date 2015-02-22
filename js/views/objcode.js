@@ -66,10 +66,12 @@ var ObjectCodeView = Backbone.View.extend({
 		if (this.code)
 			if (this.code.errors.length === 0)
 				_.each(this.code.obj, function (line) {
-					var $line = new ObjectCodeLineView(line);
+					var $line = new ObjectCodeLineView({line: line});
 					this.$lines.push($line);
-					if (line.lineno && line.binary.trim().length) {
-						var lineno = parseInt(line.lineno, 16);
+					var lineno = line.substring(2, 8).trim();
+					var binary = line.substring(9, 22).trim();
+					if (lineno && binary.trim().length) {
+						var lineno = parseInt(lineno, 16);
 						if (this.linesByLineNo[lineno])
 							this.linesByLineNo[lineno].push($line);
 						else
@@ -86,7 +88,6 @@ var ObjectCodeView = Backbone.View.extend({
 
 var ObjectCodeLineView = Backbone.View.extend({
 	className: 'object-code-line',
-	template: _.template($('#tmpl_object_code_line').html()),
 
 	initialize: function (options) {
 		this.updateSource(options);
@@ -94,11 +95,11 @@ var ObjectCodeLineView = Backbone.View.extend({
 	},
 
 	updateSource: function (options) {
-		this.options = options;
+		this.line = options.line;
 	},
 
 	render: function () {
-		this.$el.empty().append(this.template(this.options));
+		this.$el.text(this.line);
 	},
 
 	highlight: function () {

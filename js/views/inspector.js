@@ -27,13 +27,7 @@ var InspectorView = Backbone.View.extend({
 	setObjectCode: function (code) {
 		this.objectCode = _.clone(code);
 
-		this.objectCode.obj = _.map(code.obj.split('\n'), function (line) {
-			return {
-				lineno: line.substring(2, 8),
-				binary: line.substring(9, 22),
-				source: line.substring(24)
-			}
-		});
+		this.objectCode.obj = _.map(code.obj.split('\n'));
 
 		this.$objcode.setObjectCode(this.objectCode);
 	},
