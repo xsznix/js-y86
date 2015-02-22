@@ -235,7 +235,7 @@ html, body {
 	font-family: 'Inconsolata';
 	font-size: 14px;
 
-	max-width: 420px;
+	max-width: 450px;
 	margin: 0 auto;
 }
 
@@ -277,6 +277,7 @@ html, body {
 
 .registers .flags,
 .registers .status,
+.registers .err,
 .registers .pc {
 	display: -webkit-flex;
 	display: flex;
@@ -294,6 +295,7 @@ html, body {
 }
 
 .registers .status .label,
+.registers .err .label,
 .registers .pc .label {
 	width: 34px;
 	margin-right: 6px;

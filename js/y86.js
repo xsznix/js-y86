@@ -7,7 +7,16 @@ var PC 		= 0,
 	STAT	= 'AOK',
 	MEMORY 	= new Uint8Array(MEM_SIZE),
 	SF = 0, ZF = 0, OF = 0,
-	ERR = 'AOK';
+	ERR = '';
+
+// Bounds check the register array
+function getRegister (idx) {
+	if (idx < 0 || idx > 8) {
+		STAT = 'INS';
+		throw new Error('Invalid register ID: 0x' + idx.toString(16));
+	}
+	return REG[idx];
+}
 
 // Uint32Arrays are not actually arrays
 Uint8Array.prototype.slice = function () {
@@ -25,16 +34,15 @@ function RESET() {
 	REG	= new Uint32Array(8);
 	STAT = 'AOK';
 	SF = 0; ZF = 0; OF = 0;
-	ERR = 'AOK';
+	ERR = '';
 }
 
 // Load
 function LD (addr) {
 	var result;
-	if (addr > MEMORY.length || addr < 0) {
+	if (addr < 0 || addr + 4 > MEM_SIZE) {
 		STAT = 'ADR';
-		print("Invalid address. PC = " + addr);
-		return 0;
+		throw new Error("Invalid address 0x" + addr.toString(16));
 	}
 	result  = MEMORY[addr];
 	result |= MEMORY[addr + 1] << 8;
@@ -46,12 +54,12 @@ function LD (addr) {
 // Store
 function ST(addr, data, bytes){
 	var result, i;
-	if (addr < 0) {
+	if (addr < 0 || addr + bytes > MEM_SIZE) {
 		STAT = 'ADR';
+		throw new Error("Invalid address 0x" + addr.toString(16));
 	}
 	if (typeof bytes === 'undefined') {
 		bytes = Math.ceil(Math.log(data + 1) / Math.log(16) / 2);
-		print('No Bytes, using ' + bytes)
 	}
 	for (i = 0; i < bytes; i++){
 		MEMORY[addr + i] = data & 0xFF;
@@ -296,6 +304,7 @@ function ASSEMBLE (raw) {
 function INIT (obj) {
 	MEMORY = toByteArray(obj);
 	STAT = 'AOK';
+	ERR = '';
 	RESET();
 }
 
@@ -353,7 +362,11 @@ function STEP () {
 	var args = DECODE(instr);
 
 	// Execute + Memory + Write Back ???
-	INSTR[icode].call(args);
+	try {
+		INSTR[icode].call(args);
+	} catch (e) {
+		ERR = e.message;
+	}
 }
 
 function hex2arr (str) {
