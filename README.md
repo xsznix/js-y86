@@ -1,15 +1,14 @@
 js-y86
 ======
 
-js-y86 is an assembler and simulator written in Javascript. 
+js-y86 is an assembler and simulator written in Javascript. It supports:
 
-To use on a webpage, include y86.js first then the rest of the .js files. ASSEMBLE takes a string of y86 assembly code and produces another string formatted as a .yo file. This string can be passed to toByteArray() to create a byte array which can be passed to EXECUTE to have it run. 
+* All of the original y86 instructions plus cmovX
+* Breakpoints via `brk`
+* Step-by-step execution
+* Inspect the contents of the registers, flags, and memory after every instruction
+* Manually pause if you get stuck in an infinite loop
+* Syntax highlighting
+* See your (hopefully useful) compile errors as you type
 
-On node.js, to assemble a .ys file, run:
-	
-	node y86.js -a source.ys
-
-To execute, run:
-	
-	node y86.js -e object.yo
-
+[See it in action](https://xsznix.github.io/js-y86/) or [read the documentation on the Wiki](https://github.com/xsznix/js-y86/wiki).
