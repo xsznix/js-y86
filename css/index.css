@@ -227,6 +227,7 @@ html, body {
 }
 
 .registers .column {
+	-webkit-flex: 1 1;
 	flex: 1 1;
 }
 
@@ -253,6 +254,7 @@ html, body {
 
 .registers .register .value_hex,
 .registers .register .value_dec {
+	-webkit-flex: 1 1;
 	flex: 1 1;
 }
 
@@ -273,6 +275,7 @@ html, body {
 .registers .flags .flag {
 	display: -webkit-flex;
 	display: flex;
+	-webkit-flex: 1 1;
 	flex: 1 1;
 }
 
