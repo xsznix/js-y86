@@ -38,16 +38,17 @@ function RESET() {
 }
 
 // Load
-function LD (addr) {
+function LD (addr, mem) {
+	mem = mem || MEMORY;
 	var result;
 	if (addr < 0 || addr + 4 > MEM_SIZE) {
 		STAT = 'ADR';
 		throw new Error("Invalid address 0x" + addr.toString(16));
 	}
-	result  = MEMORY[addr];
-	result |= MEMORY[addr + 1] << 8;
-	result |= MEMORY[addr + 2] << 16;
-	result |= MEMORY[addr + 3] << 24;
+	result  = mem[addr];
+	result |= mem[addr + 1] << 8;
+	result |= mem[addr + 2] << 16;
+	result |= mem[addr + 3] << 24;
 	return result;
 }
 
@@ -179,7 +180,9 @@ function normalizeSource (lines) {
 	});
 }
 
-function ASSEMBLE (raw) {
+function ASSEMBLE (raw, errorsOnly) {
+	errorsOnly = !!errorsOnly;
+
 	var lines = raw.split('\n'), line,
 		symbols = {},
 		result = new Array(lines.length),
@@ -191,6 +194,10 @@ function ASSEMBLE (raw) {
 
 	// Clean up raw e.g. remove comments, fix spacing
 	normalizeSource(lines);
+
+	// Last line must be blank in Linux simulator
+	if (lines[lines.length - 1].trim() !== '')
+		errors.push([lines.length, 'Last line must be blank.']);
 
 	// Create symbol table and mark memory addresses
 	_.each(lines, function (line, i) {
@@ -281,6 +288,9 @@ function ASSEMBLE (raw) {
 			}
 		}
 	});
+
+	if (errorsOnly)
+		return { errors: errors }
 
 	var objectCode = _.map(result, function (line) {
 		// 0xXXXX: XXXXXX...

@@ -36,7 +36,7 @@ var EditorView = Backbone.View.extend({
 	_annotate: function () {
 		var value = this.getSource();
 
-		var errors = ASSEMBLE(value).errors;
+		var errors = ASSEMBLE(value, true).errors;
 
 		var errorObjs = _.map(errors, function (error) {
 			return {
