@@ -116,10 +116,10 @@ var MemWordView = Backbone.View.extend({
 		var frag = document.createDocumentFragment();
 		var $address = document.createElement('div');
 		$address.className = 'address';
-		$address.innerText = address_str;
+		$address.textContent = address_str;
 		var $value = document.createElement('div');
 		$value.className = 'value';
-		$value.innerText = value_str;
+		$value.textContent = value_str;
 		frag.appendChild($address);
 		frag.appendChild($value);
 		this.$el[0].appendChild(frag);
