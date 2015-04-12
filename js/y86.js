@@ -122,7 +122,7 @@ function evalArgs(list, args, symbols){
 				result['D'] = result['V'];
 			} else {
 				try {
-					result['V'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace('$', '')) >>> 0));
+					result['V'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace('$', '')) >>> 0, 8));
 				} catch (e) {
 					// Use 'not a symbol' instead of the more cryptic 'not a number'
 					throw new Error('Undefined symbol: ' + args[i]);
