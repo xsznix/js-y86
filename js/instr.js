@@ -55,14 +55,16 @@ INSTR[3] = function () {
 	REG[this.rB] = this.V;
 };
 INSTR[4] = function () {
-	var valA = getRegister(this.rA),
-		valB = getRegister(this.rB),
-		valE = valB + this.D;
+        var valA = getRegister(this.rA);
+        var valB = 0; // valB is zero if rB is not used
+        if(this.rB != 15) valB = getRegister(this.rB); 
+        var valE = valB + this.D;    
 	ST(valE, valA, 4);
 };
 INSTR[5] = function () {
-	var valB = getRegister(this.rB),
-		valE = valB + this.D;
+        var valB = 0; // valB is zero if rB is not used
+        if(this.rB != 15) valB = getRegister(this.rB); 
+        var valE = valB + this.D;
 	REG[this.rA] = LD(valE);
 };
 INSTR[6] = function () {
@@ -170,6 +172,39 @@ INSTR[11] = function () {
 	REG[4] = valE;
 	REG[this.rA] = valM;
 };
+
+INSTR[12] = function () { // iaddl, isubl, iandl, ixorl
+    var valA = this.V;
+    var valB = getRegister(this.rB);
+    var sgnA, sgnB, sgnR, signBit = 0x80000000;
+    switch(this.fn) {
+    case 0:
+	sgnA = !!(valA & signBit);
+	sgnB = !!(valB & signBit);
+	REG[this.rB] += valA;
+	sgnR = !!(getRegister(this.rB) & signBit);
+	OF = +(sgnA && sgnB && !sgnR ||
+	       !sgnA && !sgnB && sgnR)
+	break;
+    case 1:
+	sgnA = !!(valA & signBit);
+	sgnB = !!(valB & signBit);
+	REG[this.rB] -= valA;
+	sgnR = !!(getRegister(this.rB) & signBit);
+	OF = +(sgnA && sgnB && !sgnR ||
+	       !sgnA && !sgnB && sgnR)
+	break;
+    case 2:
+	REG[this.rB] = valA & getRegister(this.rB);
+	break;
+    case 3:
+	REG[this.rB] = valA ^ getRegister(this.rB);
+	break;
+    }
+    SF = getRegister(this.rB) & 0x80000000 ? 1 : 0;
+    ZF = getRegister(this.rB) === 0 ? 1 : 0;
+};
+
 INSTR[15] = function () {
 	switch(this.fn) {
 		case 0:

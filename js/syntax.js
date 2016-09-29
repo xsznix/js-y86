@@ -33,6 +33,11 @@ SYNTAX['ret'] = [];
 SYNTAX['pushl'] = ['rA'];
 SYNTAX['popl'] = ['rA'];
 
+SYNTAX['iaddl'] = ['V', 'rB'];
+SYNTAX['isubl'] = ['V', 'rB'];
+SYNTAX['ixorl'] = ['V', 'rB'];
+SYNTAX['iandl'] = ['V', 'rB'];
+
 SYNTAX['brk'] = [];
 SYNTAX['brkle'] = [];
 SYNTAX['brkl'] = [];
@@ -40,3 +45,4 @@ SYNTAX['brke'] = [];
 SYNTAX['brkne'] = [];
 SYNTAX['brkge'] = [];
 SYNTAX['brkg'] = [];
+

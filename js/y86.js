@@ -135,12 +135,24 @@ function evalArgs(list, args, symbols){
 			} catch (e) {
 				throw new Error('Undefined symbol: ' + args[i]);
 			}
-		} else if (item === 'D(rB)') {
-			result['D'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace(/\(.*/, '')) >>> 0, 8));
-			result['rB'] = getRegCode(args[i].replace(/^.*\((.*)\)/, '$1'));
-		}
+		} else if (item === 'D(rB)') { 
+		    // improve syntax to allow D(rB), D and (rB) with D as symbol or number.
+		    // D 
+		    try {                   
+			var varD = args[i].replace(/\(.*/, ''); // returns arg[i] if it fails       
+			if (symbols.hasOwnProperty(varD)) varD = symbols[varD];
+			var resD = toBigEndian(padHex(parseNumberLiteral(varD) >>> 0, 8));
+			result['D'] = resD;
+		    } catch (e) { /* D is not used and will be consider as zero */ }               
+   		    // (rB) 
+		    try {                   
+			var varR = args[i].replace(/^.*\((.*)\)/, '$1'); // returns arg[i] if it fails      
+			var resR = getRegCode(varR);
+			result['rB'] = resR;
+		    } catch (e) { result['rB'] = 'f'; /* rB is not used and will be consider as zero */ }
+		} 	    
 	}
-	return result;
+        return result;
 }
 
 function ENCODE(instr, symbols) {
