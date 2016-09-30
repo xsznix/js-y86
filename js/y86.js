@@ -135,22 +135,23 @@ function evalArgs(list, args, symbols){
 			} catch (e) {
 				throw new Error('Undefined symbol: ' + args[i]);
 			}
-		} else if (item === 'D(rB)') { 
+		} else if (item === 'D(rB)') {
+
 		    // improve syntax to allow D(rB), D and (rB) with D as symbol or number.
-		    // D 
-		    try {                   
-			var varD = args[i].replace(/\(.*/, ''); // returns arg[i] if it fails       
-			if (symbols.hasOwnProperty(varD)) varD = symbols[varD];
-			var resD = toBigEndian(padHex(parseNumberLiteral(varD) >>> 0, 8));
-			result['D'] = resD;
-		    } catch (e) { /* D is not used and will be consider as zero */ }               
-   		    // (rB) 
-		    try {                   
-			var varR = args[i].replace(/^.*\((.*)\)/, '$1'); // returns arg[i] if it fails      
-			var resR = getRegCode(varR);
-			result['rB'] = resR;
-		    } catch (e) { result['rB'] = 'f'; /* rB is not used and will be consider as zero */ }
-		} 	    
+		    var patt = /^(.*)\((.*)\)$/;
+		    var T = patt.test(args[i]); // test if parentheses are used or not
+		    var D = args[i].replace(patt, '$1');
+		    if (symbols.hasOwnProperty(D)) D = symbols[D]; // if D is a symbol, get its value
+		    result['D'] = toBigEndian(padHex(parseNumberLiteral(D) >>> 0, 8)); // D will be zero if unused
+		    
+		    if(T) { /* rB used */
+			var R = args[i].replace(patt, '$2');		    
+			result['rB'] = getRegCode(R);
+		    }
+		    else { /* rB unused */
+			result['rB'] = 'f';
+		    }
+		}
 	}
         return result;
 }
