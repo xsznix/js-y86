@@ -20,7 +20,7 @@ define("ace/mode/y86_highlight_rules",
 				"regex": /\w+:/
 			}, {
 				"token": "keyword.control",
-				"regex": /halt|nop|rrmovl|cmovle|cmovl|cmove|cmovne|cmovge|cmovg|irmovl|rmmovl|mrmovl|addl|subl|xorl|andl|jmp|jle|jl|je|jne|jge|jg|call|ret|pushl|popl|brk|brkle|brkl|brke|brkne|brkge|brkg/
+				"regex": /halt|nop|rrmovl|cmovle|cmovl|cmove|cmovne|cmovge|cmovg|irmovl|rmmovl|mrmovl|addl|subl|xorl|andl|jmp|jle|jl|je|jne|jge|jg|call|ret|pushl|popl|iaddl|isubl|iandl|ixorl|brk|brkle|brkl|brke|brkne|brkge|brkg/
 			}, {
 				"token": ["variable.language", "register"],
 				"regex": /%(?:eax|ebx|ecx|edx|ebp|esp|esi|edi)/

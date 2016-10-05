@@ -51,7 +51,11 @@ var ASSEM = [];
 		return 'b0' + this.rA + 'f';
 	};
 
-	ASSEM[15] = function () {
+        ASSEM[12] = function () { // iaddl, isubl, iandl, ixorl
+                return 'c' + this.fn + 'f' + this.rB + padq(this.V);
+	};
+
+        ASSEM[15] = function () {
 		return 'f' + this.fn;
 	}
 })();

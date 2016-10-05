@@ -2,7 +2,7 @@
 var INSTRUCTION_LEN = [1, 1, 2, 6,
                        6, 6, 2, 5,
                        5, 1, 2, 2,
-                       1, 1, 1, 1],
+                       6, 1, 1, 1],
 	num2reg = ['%eax', '%ecx', '%edx', '%ebx','%esp', '%ebp', '%esi', '%edi'],
 	inst2num = {
 		'halt': 0,
@@ -38,6 +38,11 @@ var INSTRUCTION_LEN = [1, 1, 2, 6,
 		'pushl': 10,
 		'popl': 11,
 
+	        'iaddl': 12,
+	        'isubl': 12,
+	        'iandl': 12,
+                'ixorl': 12,  
+
 		'brk': 15,
 		'brkle': 15,
 		'brkl': 15,
@@ -68,6 +73,11 @@ var INSTRUCTION_LEN = [1, 1, 2, 6,
 		'jge': 5,
 		'jg': 6,
 
+	        'iaddl': 0,
+	        'isubl': 1,
+	        'iandl': 2,
+                'ixorl': 3,  
+	    
 		'brk': 0,
 		'brkle': 1,
 		'brkl': 2,

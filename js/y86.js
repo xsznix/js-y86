@@ -136,11 +136,24 @@ function evalArgs(list, args, symbols){
 				throw new Error('Undefined symbol: ' + args[i]);
 			}
 		} else if (item === 'D(rB)') {
-			result['D'] = toBigEndian(padHex(parseNumberLiteral(args[i].replace(/\(.*/, '')) >>> 0, 8));
-			result['rB'] = getRegCode(args[i].replace(/^.*\((.*)\)/, '$1'));
+
+		    // improve syntax to allow D(rB), D and (rB) with D as symbol or number.
+		    var patt = /^(.*)\((.*)\)$/;
+		    var T = patt.test(args[i]); // test if parentheses are used or not
+		    var D = args[i].replace(patt, '$1');
+		    if (symbols.hasOwnProperty(D)) D = symbols[D]; // if D is a symbol, get its value
+		    result['D'] = toBigEndian(padHex(parseNumberLiteral(D) >>> 0, 8)); // D will be zero if unused
+		    
+		    if(T) { /* rB used */
+			var R = args[i].replace(patt, '$2');		    
+			result['rB'] = getRegCode(R);
+		    }
+		    else { /* rB unused */
+			result['rB'] = 'f';
+		    }
 		}
 	}
-	return result;
+        return result;
 }
 
 function ENCODE(instr, symbols) {
