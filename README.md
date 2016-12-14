@@ -1,5 +1,4 @@
-js-y86
-======
+# js-y86
 
 js-y86 is an assembler and simulator written in Javascript. It supports:
 
@@ -27,3 +26,8 @@ js-y86 forks have been spottted at:
 
 * [Y86 pipeline emulator by Shu Ding](http://y86.js.org/)
 * [Another Y86 pipeline simulator by Linghao Zhang](http://dnc1994.github.io/Y86-Simulator/)
+
+## License
+
+This project is licensed under the terms of the MIT license.
+
