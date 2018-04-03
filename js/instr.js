@@ -40,7 +40,7 @@ INSTR[2] = function () {
 		case 5:
 			// CMOVGE
 			if (SF === 0 || ZF === 1) {
-				getRegister(this.rB) = getRegister(this.rA);
+				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
 		case 6:
