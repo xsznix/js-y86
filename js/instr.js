@@ -15,13 +15,13 @@ INSTR[2] = function () {
 			break;
 		case 1:
 			// CMOVLE
-			if (SF === 1 || ZF === 1) {
+			if (SF ^ OF === 1 || ZF === 1) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
 		case 2:
 			// CMOVL
-			if (SF === 1) {
+			if (SF ^ OF === 1) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
@@ -39,13 +39,13 @@ INSTR[2] = function () {
 			break;
 		case 5:
 			// CMOVGE
-			if (SF === 0 || ZF === 1) {
+			if (SF ^ OF === 0) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
 		case 6:
 			// CMOVG
-			if (SF === 0 && ZF === 0) {
+			if (SF ^ OF === 0 && ZF === 0) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
@@ -130,7 +130,7 @@ INSTR[7] = function ()  {
 			break;
 		case 5:
 			// JGE
-			if (SF ^ OF === 0 || ZF === 1) {
+			if (SF ^ OF === 0) {
 				PC = this.Dest;
 			}
 			break;
@@ -213,13 +213,13 @@ INSTR[15] = function () {
 			break;
 		case 1:
 			// BRKLE
-			if (SF === 1 || ZF === 1) {
+			if (SF ^ OF === 1 || ZF === 1) {
 				STAT = 'DBG';
 			}
 			break;
 		case 2:
 			// BRKL
-			if (SF === 1) {
+			if (SF ^ OF === 1) {
 				STAT = 'DBG';
 			}
 			break;
@@ -237,13 +237,13 @@ INSTR[15] = function () {
 			break;
 		case 5:
 			// BRKGE
-			if (SF === 0 || ZF === 1) {
+			if (SF ^ OF === 0) {
 				STAT = 'DBG';
 			}
 			break;
 		case 6:
 			// BRKG
-			if (SF === 0 && ZF === 0) {
+			if (SF ^ OF === 0 && ZF === 0) {
 				STAT = 'DBG';
 			}
 			break;
