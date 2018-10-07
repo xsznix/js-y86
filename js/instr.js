@@ -15,13 +15,13 @@ INSTR[2] = function () {
 			break;
 		case 1:
 			// CMOVLE
-			if (SF === 1 || ZF === 1) {
+			if (SF ^ OF === 1 || ZF === 1) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
 		case 2:
 			// CMOVL
-			if (SF === 1) {
+			if (SF ^ OF === 1) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
@@ -39,13 +39,13 @@ INSTR[2] = function () {
 			break;
 		case 5:
 			// CMOVGE
-			if (SF === 0 || ZF === 1) {
+			if (SF ^ OF === 0) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
 		case 6:
 			// CMOVG
-			if (SF === 0 && ZF === 0) {
+			if (SF ^ OF === 0 && ZF === 0) {
 				REG[this.rB] = getRegister(this.rA);
 			}
 			break;
@@ -57,13 +57,13 @@ INSTR[3] = function () {
 INSTR[4] = function () {
         var valA = getRegister(this.rA);
         var valB = 0; // valB is zero if rB is not used
-        if(this.rB != 15) valB = getRegister(this.rB); 
-        var valE = valB + this.D;    
+        if(this.rB != 15) valB = getRegister(this.rB);
+        var valE = valB + this.D;
 	ST(valE, valA, 4);
 };
 INSTR[5] = function () {
         var valB = 0; // valB is zero if rB is not used
-        if(this.rB != 15) valB = getRegister(this.rB); 
+        if(this.rB != 15) valB = getRegister(this.rB);
         var valE = valB + this.D;
 	REG[this.rA] = LD(valE);
 };
@@ -85,8 +85,8 @@ INSTR[6] = function () {
 			sgnB = !!(valB & signBit);
 			REG[this.rB] -= getRegister(this.rA);
 			sgnR = !!(getRegister(this.rB) & signBit);
-			OF = +(sgnA && sgnB && !sgnR ||
-			       !sgnA && !sgnB && sgnR)
+			OF = +(!sgnA && sgnB && !sgnR ||
+			       sgnA && !sgnB && sgnR)
 			break;
 		case 2:
 			REG[this.rB] = getRegister(this.rA) & getRegister(this.rB);
@@ -106,13 +106,13 @@ INSTR[7] = function ()  {
 			break;
 		case 1:
 			// JLE
-			if (SF === 1 || ZF === 1) {
+			if (SF ^ OF === 1 || ZF === 1) {
 				PC = this.Dest;
 			}
 			break;
 		case 2:
 			// JL
-			if (SF === 1) {
+			if (SF ^ OF === 1) {
 				PC = this.Dest;
 			}
 			break;
@@ -130,13 +130,13 @@ INSTR[7] = function ()  {
 			break;
 		case 5:
 			// JGE
-			if (SF === 0 || ZF === 1) {
+			if (SF ^ OF === 0) {
 				PC = this.Dest;
 			}
 			break;
 		case 6:
 			// JG
-			if (SF === 0 && ZF === 0) {
+			if (SF ^ OF === 0 && ZF === 0) {
 				PC = this.Dest;
 			}
 			break;
@@ -191,8 +191,8 @@ INSTR[12] = function () { // iaddl, isubl, iandl, ixorl
 	sgnB = !!(valB & signBit);
 	REG[this.rB] -= valA;
 	sgnR = !!(getRegister(this.rB) & signBit);
-	OF = +(sgnA && sgnB && !sgnR ||
-	       !sgnA && !sgnB && sgnR)
+	OF = +(!sgnA && sgnB && !sgnR ||
+	       sgnA && !sgnB && sgnR)
 	break;
     case 2:
 	REG[this.rB] = valA & getRegister(this.rB);
@@ -213,13 +213,13 @@ INSTR[15] = function () {
 			break;
 		case 1:
 			// BRKLE
-			if (SF === 1 || ZF === 1) {
+			if (SF ^ OF === 1 || ZF === 1) {
 				STAT = 'DBG';
 			}
 			break;
 		case 2:
 			// BRKL
-			if (SF === 1) {
+			if (SF ^ OF === 1) {
 				STAT = 'DBG';
 			}
 			break;
@@ -237,13 +237,13 @@ INSTR[15] = function () {
 			break;
 		case 5:
 			// BRKGE
-			if (SF === 0 || ZF === 1) {
+			if (SF ^ OF === 0) {
 				STAT = 'DBG';
 			}
 			break;
 		case 6:
 			// BRKG
-			if (SF === 0 && ZF === 0) {
+			if (SF ^ OF === 0 && ZF === 0) {
 				STAT = 'DBG';
 			}
 			break;
