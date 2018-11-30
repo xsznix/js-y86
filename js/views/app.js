@@ -4,9 +4,10 @@ var AppView = Backbone.View.extend({
 		this.editor = new EditorView();
 		this.inspector = new InspectorView();
 		this.memview = new MemoryView();
-
+		this.input = document.getElementById("input"); // the input item defined in index.html
+		this.input.addEventListener("change", handleFile, false);
 		this.listenTo(Backbone.Events, 'app:redraw', this.redrawButtons);
-
+		this.listenTo(Backbone.Events, 'app:load', this.loadFile);
 		this.render();
 	},
 
@@ -14,7 +15,8 @@ var AppView = Backbone.View.extend({
 		'click .compile': 'compile',
 		'click .reset': 'reset',
 		'click .continue': 'continue',
-		'click .step': 'step'
+		'click .step': 'step',
+		'click .load': 'load'
 	},
 
 	render: function () {
@@ -28,19 +30,16 @@ var AppView = Backbone.View.extend({
 	compile: function () {
 		var obj = ASSEMBLE(this.editor.getSource());
 		this.inspector.setObjectCode(obj);
-
 		if (obj.errors.length === 0)
 			INIT(obj.obj);
-
 		Backbone.Events.trigger('app:redraw');
 		this.$('.continue span').text('Start');
 	},
 
 	reset: function () {
-			RESET();
-			this.$('.continue span').text('Start');
-
-			Backbone.Events.trigger('app:redraw');
+		RESET();
+		this.$('.continue span').text('Start');
+		Backbone.Events.trigger('app:redraw');
 	},
 
 	continue: function () {
@@ -60,6 +59,19 @@ var AppView = Backbone.View.extend({
 		}
 	},
 
+	load: function () {
+		this.input.click(); // open file dialog
+	},
+
+	loadFile: function () {
+		var data = this.input.data;
+		// console.log(data);
+		this.editor.setSource(data);
+		RESET();
+		this.$('.continue span').text('Start');
+		Backbone.Events.trigger('app:redraw');
+	},
+
 	triggerRedraw: function () {
 		Backbone.Events.trigger('app:redraw');
 	},
@@ -72,4 +84,18 @@ var AppView = Backbone.View.extend({
 			this.$('.step, .continue').addClass('disabled');
 		}
 	}
+
 });
+
+function handleFile() { // 'this' is the input item defined in index.html
+	this.data = null;
+	var file = this.files[0];
+	var reader = new FileReader();
+	reader.onloadend = (function (that) {
+		return function (evt) {
+			that.data = evt.target.result;
+			Backbone.Events.trigger('app:load');
+		};
+	})(this);
+	reader.readAsText(file);
+}
