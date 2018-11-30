@@ -30,4 +30,3 @@ js-y86 forks have been spottted at:
 ## License
 
 This project is licensed under the terms of the MIT license.
-
